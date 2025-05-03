@@ -1,12 +1,20 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany, hasManyThrough } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, hasMany, hasManyThrough } from '@adonisjs/lucid/orm'
 import Student from './student.js'
 import type { HasMany, HasManyThrough } from '@adonisjs/lucid/types/relations'
 import Book from './book.js'
+import { randomUUID } from 'node:crypto'
 
 export default class ClassRoom extends BaseModel {
+  static selfAssignPrimaryKey = true
+
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
+
+  @beforeCreate()
+  static assignUuid(classRoom: ClassRoom) {
+    classRoom.id = randomUUID()
+  }
 
   @column()
   declare name: string

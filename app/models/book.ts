@@ -1,12 +1,20 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
 import Author from './author.js'
 import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
 import Genre from './genre.js'
+import { randomUUID } from 'node:crypto'
 
 export default class Book extends BaseModel {
+  static selfAssignPrimaryKey = true
+
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
+
+  @beforeCreate()
+  static assignUuid(book: Book) {
+    book.id = randomUUID()
+  }
 
   @column()
   declare title: string
