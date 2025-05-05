@@ -4,6 +4,7 @@ import Author from './author.js'
 import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
 import Genre from './genre.js'
 import { randomUUID } from 'node:crypto'
+import { ModelObject } from '@adonisjs/lucid/types/model'
 
 export default class Book extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -27,6 +28,9 @@ export default class Book extends BaseModel {
 
   @column()
   declare isAvailable: boolean
+
+  @column()
+  declare authorId: string
 
   @belongsTo(() => Author)
   declare author: BelongsTo<typeof Author>

@@ -1,7 +1,7 @@
-import Layout from '~/layouts/layout'
+import MainLayout from '~/layouts/main-layout'
 
 export default function Home() {
-  return <div></div>
+  return <div>Home</div>
 }
 
-Home.layout = (page: any) => <Layout children={page} />
+Home.layout = (page: any) => <MainLayout children={page} />
