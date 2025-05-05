@@ -1,12 +1,13 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 /**
  * Validator to validate the payload when creating
  * a new author.
  */
+
 export const createAuthorValidator = vine.compile(
   vine.object({
-    name: vine.string().unique({ column: 'name', table: 'authors' }),
+    name: vine.string().unique({ column: 'name', table: 'authors', caseInsensitive: true }),
   })
 )
 

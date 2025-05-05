@@ -5,7 +5,7 @@ import { FloatingInput } from '~/components/ui/inputs'
 import MainLayout from '~/layouts/main-layout'
 
 export default function CreateAuthorForm() {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing } = useForm({
     name: '',
   })
 
@@ -24,7 +24,6 @@ export default function CreateAuthorForm() {
         onChange={(e) => setData('name', e.target.value)}
         value={data.name}
       />
-      {errors.name && <div>{errors.name}</div>}
 
       {processing ? (
         <LoadingButton label="Adicionando Autor(a)..." />
