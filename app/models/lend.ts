@@ -22,6 +22,12 @@ export default class Lend extends BaseModel {
   @column()
   declare itsOngoing: boolean
 
+  @column()
+  declare studentId: string
+
+  @column()
+  declare bookId: string
+
   @belongsTo(() => Student)
   declare student: BelongsTo<typeof Student>
 

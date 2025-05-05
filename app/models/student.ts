@@ -30,6 +30,9 @@ export default class Student extends BaseModel {
   @column()
   declare onLend: boolean
 
+  @column()
+  declare classRoomId: string
+
   @belongsTo(() => ClassRoom)
   declare classRoom: BelongsTo<typeof ClassRoom>
 
