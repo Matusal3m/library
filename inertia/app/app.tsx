@@ -5,8 +5,8 @@ import '../css/app.css'
 import 'flowbite'
 import { hydrateRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
-import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import MainLayout from '~/layouts/main-layout'
+import { AuthorsLayout } from '~/layouts/authors-layout'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -20,7 +20,9 @@ createInertiaApp({
     let page = pages[`../pages/${name}.tsx`]
 
     //@ts-ignore
-    page.default.layout = (page: any) => <MainLayout children={page} />
+    page.default.layout = name.startsWith('authors/')
+      ? (page: any) => <AuthorsLayout children={page} />
+      : (page: any) => <MainLayout children={page} />
     return page
   },
 

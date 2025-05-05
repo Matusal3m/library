@@ -15,15 +15,15 @@ export default function CreateAuthorForm() {
   }
 
   return (
-    <form onSubmit={submit}>
-      <div className="w-xl p-7">
-        <FloatingInput
-          label="Nome do autor"
-          name="author_name"
-          onChange={(e) => setData('name', e.target.value)}
-          value={data.name}
-        />
-      </div>
+    <form className="p-7 flex flex-col justify-center items-center w-1/2 mx-auto" onSubmit={submit}>
+      <h4 className="dark:text-white">Adicione um novo autor ao sistema</h4>
+
+      <FloatingInput
+        label="Nome do autor"
+        name="author_name"
+        onChange={(e) => setData('name', e.target.value)}
+        value={data.name}
+      />
       {errors.name && <div>{errors.name}</div>}
 
       {processing ? (

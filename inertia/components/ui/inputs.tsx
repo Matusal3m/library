@@ -1,16 +1,20 @@
+import { cn } from '~/utils/cn'
+
 export function FloatingInput({
   value,
   onChange,
   label,
   name,
+  className,
 }: {
   value: any
   onChange: React.ChangeEventHandler<HTMLInputElement>
   label: string
   name: string
+  className?: string
 }) {
   return (
-    <div className="relative z-0 w-full mb-5 group">
+    <div className={cn('relative z-0 w-full mb-5 group', className)}>
       <input
         type="text"
         name={name}

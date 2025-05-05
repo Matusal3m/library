@@ -1,4 +1,5 @@
 import Author from '#models/author'
+import Book from '#models/book'
 import { createAuthorValidator, updateAuthorValidator } from '#validators/author'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -44,7 +45,20 @@ export default class AuthorsController {
   async show({ params, inertia }: HttpContext) {
     const author = await Author.findByOrFail({ id: params.id })
 
-    return inertia.render('authors/show', { author })
+    const authorsWithBooks = {
+      id: author.id,
+      name: author.name,
+      books: author.books as unknown as {
+        id: string
+        title: string
+        seducCode: string
+        quantity: number
+        isAvailable: boolean
+        createdAt: string
+      }[],
+    }
+
+    return inertia.render('authors/show', { author: authorsWithBooks })
   }
 
   /**

@@ -10,6 +10,5 @@
 import router from '@adonisjs/core/services/router'
 const AuthorsController = () => import('#controllers/authors_controller')
 
-router.group(() => {
-  router.resource('authors', AuthorsController)
-})
+router.resource('authors', AuthorsController)
+router.on('/').renderInertia('home')
