@@ -1,5 +1,4 @@
 import Author from '#models/author'
-import Book from '#models/book'
 import { createAuthorValidator, updateAuthorValidator } from '#validators/author'
 import type { HttpContext } from '@adonisjs/core/http'
 
