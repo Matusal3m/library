@@ -1,11 +1,11 @@
-import { AuthorsHeader, AuthorsHeaderItemProps } from '~/components/headers/authors-header'
+import { Header, HeaderItemProps } from '~/components/ui/header'
 import MainLayout from './main-layout'
 
 export function AuthorsLayout({ children }: { children: React.ReactNode }) {
-  const items: AuthorsHeaderItemProps[] = [
+  const items: HeaderItemProps[] = [
     {
       href: '/authors',
-      label: 'Ver todos autores',
+      label: 'Todos os autores',
     },
     {
       href: '/authors/create',
@@ -15,7 +15,7 @@ export function AuthorsLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <MainLayout>
-      <AuthorsHeader items={items} />
+      <Header items={items} />
       {children}
     </MainLayout>
   )
