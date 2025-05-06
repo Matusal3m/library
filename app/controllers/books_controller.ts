@@ -1,5 +1,9 @@
+import Author from '#models/author'
 import Book from '#models/book'
+import Genre from '#models/genre'
+
 import type { HttpContext } from '@adonisjs/core/http'
+import { createBookValidator } from '#validators/book'
 
 export default class BooksController {
   /**
@@ -24,12 +28,26 @@ export default class BooksController {
   /**
    * Display form to create a new record
    */
-  async create({}: HttpContext) {}
+  async create({ inertia }: HttpContext) {
+    const authors = (await Author.all()) as unknown as { id: string; name: string }[]
+    const genres = (await Genre.all()) as unknown as { id: string; name: string }[]
+
+    return inertia.render('books/create', { authors, genres })
+  }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request, response }: HttpContext) {
+    const { authorsIds, genresIds, ...rest } = await request.validateUsing(createBookValidator)
+
+    const book = await Book.create(rest)
+
+    await book.related('authors').attach(authorsIds)
+    await book.related('genres').attach(genresIds)
+
+    return response.redirect('/books')
+  }
 
   /**
    * Show individual record

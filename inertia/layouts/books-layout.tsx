@@ -7,6 +7,10 @@ export function BooksLayout({ children }: { children: React.ReactNode }) {
       href: '/books',
       label: 'Todos os livros',
     },
+    {
+      href: '/books/create',
+      label: 'Adicionar novo livro',
+    },
   ]
 
   return (
