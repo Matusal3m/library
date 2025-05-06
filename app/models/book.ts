@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
 import Author from './author.js'
-import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import Genre from './genre.js'
 import { randomUUID } from 'node:crypto'
 
@@ -31,10 +31,14 @@ export default class Book extends BaseModel {
   @column()
   declare authorId: string
 
-  @belongsTo(() => Author)
-  declare author: BelongsTo<typeof Author>
+  @manyToMany(() => Author, {
+    pivotTable: 'author_books',
+  })
+  declare authors: ManyToMany<typeof Author>
 
-  @manyToMany(() => Genre)
+  @manyToMany(() => Genre, {
+    pivotTable: 'genre_books',
+  })
   declare genres: ManyToMany<typeof Genre>
 
   @column.dateTime({ autoCreate: true })

@@ -7,8 +7,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
 
-      table.integer('student_id').unsigned().references('students.id')
-      table.integer('book_id').unsigned().references('books.id')
+      table.uuid('student_id').references('students.id')
+      table.uuid('book_id').references('books.id')
 
       table.boolean('was_extended').defaultTo(false)
       table.boolean('its_ongoing')

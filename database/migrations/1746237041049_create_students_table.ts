@@ -12,7 +12,7 @@ export default class extends BaseSchema {
       table.string('email', 254).unique()
       table.integer('enrollment_number').unsigned().unique()
       table.boolean('on_lend').defaultTo(false)
-      table.integer('class_room_id').unsigned().references('class_rooms.id')
+      table.uuid('class_room_id').unsigned().references('class_rooms.id')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

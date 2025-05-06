@@ -18,7 +18,9 @@ export default class Genre extends BaseModel {
   @column()
   declare name: string
 
-  @manyToMany(() => Book)
+  @manyToMany(() => Book, {
+    pivotTable: 'genre_books',
+  })
   declare books: ManyToMany<typeof Book>
 
   @column.dateTime({ autoCreate: true })
