@@ -43,21 +43,11 @@ export default class AuthorsController {
    */
   async show({ params, inertia }: HttpContext) {
     const author = await Author.findByOrFail({ id: params.id })
+    await author.load('books')
 
-    const authorsWithBooks = {
-      id: author.id,
-      name: author.name,
-      books: author.books as unknown as {
-        id: string
-        title: string
-        seducCode: string
-        quantity: number
-        isAvailable: boolean
-        createdAt: string
-      }[],
-    }
-
-    return inertia.render('authors/show', { author: authorsWithBooks })
+    return inertia.render('authors/show', {
+      author: author.serialize(),
+    })
   }
 
   /**
