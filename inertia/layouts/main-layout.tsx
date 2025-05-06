@@ -1,7 +1,10 @@
 import { Sidebar } from '~/components/ui/sidebar'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-  const items = [{ href: '/authors', label: 'Autores' }]
+  const items = [
+    { href: '/authors', label: 'Autores' },
+    { href: '/books', label: 'Livros' },
+  ]
 
   return (
     <div className="flex overflow-x-hidden min-h-screen dark:bg-gray-900">

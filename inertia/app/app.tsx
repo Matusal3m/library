@@ -7,6 +7,7 @@ import { hydrateRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
 import MainLayout from '~/layouts/main-layout'
 import { AuthorsLayout } from '~/layouts/authors-layout'
+import { BooksLayout } from '~/layouts/books-layout'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -22,7 +23,9 @@ createInertiaApp({
     //@ts-ignore
     page.default.layout = name.startsWith('authors/')
       ? (page: any) => <AuthorsLayout children={page} />
-      : (page: any) => <MainLayout children={page} />
+      : name.startsWith('books/')
+        ? (page: any) => <BooksLayout children={page} />
+        : (page: any) => <MainLayout children={page} />
     return page
   },
 
