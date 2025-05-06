@@ -6,9 +6,17 @@ export default class BooksController {
    * Display a list of resource
    */
   async index({ inertia }: HttpContext) {
-    const books = await Book.query().preload('author').preload('genres')
+    const books = await Book.query().preload('authors').preload('genres')
 
-    const booksJson = books.map((book) => book.serialize())
+    const booksJson = books.map((book) => book.serialize()) as {
+      id: string
+      title: string
+      isAvailable: boolean
+      seducCode: string
+      quantity: number
+      genres: { id: string; name: string }[]
+      authors: { id: string; name: string }[]
+    }[]
 
     return inertia.render('books/list', { books: booksJson })
   }
