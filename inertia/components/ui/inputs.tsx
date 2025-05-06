@@ -7,7 +7,6 @@ export function FloatingInput({
   name,
   className,
   type = 'text',
-  required = false,
   error,
 }: {
   value: any
@@ -16,7 +15,6 @@ export function FloatingInput({
   name: string
   className?: string
   type?: string
-  required?: boolean
   error?: string
 }) {
   return (
@@ -34,7 +32,6 @@ export function FloatingInput({
           error ? 'text-red-700 dark:text-red-400' : 'text-gray-900 dark:text-white'
         )}
         placeholder=" "
-        required={required}
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby={error ? `${name}-error` : undefined}
         value={value}
