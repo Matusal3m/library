@@ -28,9 +28,6 @@ export default class Book extends BaseModel {
   @column()
   declare isAvailable: boolean
 
-  @column()
-  declare authorId: string
-
   @manyToMany(() => Author, {
     pivotTable: 'author_books',
   })
