@@ -3,10 +3,10 @@ import BooksController from '../../../app/controllers/books_controller'
 import { Link } from '@inertiajs/react'
 import { AvailableIndicator, UnavailableIndicator } from '~/components/ui/indicators'
 
-export default function ListBooks(props: InferPageProps<BooksController, 'index'>) {
+export default function ListBooks({ books }: InferPageProps<BooksController, 'index'>) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-      {props.books.map((book) => (
+      {books.map((book) => (
         <Link href={`/books/${book.id}`} key={book.id}>
           <div className="block h-full p-6 bg-white border border-gray-200 rounded-xl shadow-md hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 transition-all">
             <h5 className="mb-3 text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
