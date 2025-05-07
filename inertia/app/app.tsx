@@ -10,6 +10,7 @@ import { AuthorsLayout } from '~/layouts/authors-layout'
 import { BooksLayout } from '~/layouts/books-layout'
 import { ClassRoomsLayout } from '~/layouts/class-rooms-layout'
 import { GenresLayout } from '~/layouts/genres-layout'
+import { StudentsLayout } from '~/layouts/students-layout'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -47,6 +48,10 @@ const swithLayout = (name: string, page: any) => {
 
   if (name.startsWith('genres/')) {
     return <GenresLayout children={page} />
+  }
+
+  if (name.startsWith('students/')) {
+    return <StudentsLayout children={page} />
   }
 
   return <MainLayout children={page} />

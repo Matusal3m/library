@@ -1,33 +1,39 @@
-import Genre from '#models/genre'
+import ClassRoom from '#models/class_room'
+import Student from '#models/student'
+import { createStudentValidator } from '#validators/student'
 import type { HttpContext } from '@adonisjs/core/http'
-import { dd } from '@adonisjs/core/services/dumper'
-export default class GenresController {
+
+export default class StudentsController {
   /**
    * Display a list of resource
    */
   async index({ inertia }: HttpContext) {
-    const genres = await Genre.query().withCount('books')
+    const students = await Student.all()
 
-    const genresJSON = genres.map((genre) => ({
-      id: genre.id,
-      name: genre.name,
-      booksCount: genre.$extras.books_count,
-    }))
-
-    return inertia.render('genres/index', { genres: genresJSON })
+    return inertia.render('students/index', {
+      students,
+    })
   }
 
   /**
    * Display form to create a new record
    */
   async create({ inertia }: HttpContext) {
-    return inertia.render('genres/create')
+    const classRooms = (await ClassRoom.all()) as { id: string; name: string }[]
+
+    return inertia.render('students/create', { classRooms })
   }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request, response }: HttpContext) {
+    const data = await request.validateUsing(createStudentValidator)
+
+    await Student.create(data)
+
+    return response.redirect('/students')
+  }
 
   /**
    * Show individual record
