@@ -8,10 +8,18 @@ export default class StudentsController {
    * Display a list of resource
    */
   async index({ inertia }: HttpContext) {
-    const students = await Student.all()
+    const students = await Student.query().preload('classRoom')
 
     return inertia.render('students/index', {
-      students,
+      students: students.map((student) => student.serialize()) as {
+        id: string
+        name: string
+        enrollmentNumber: number
+        phoneNumber: string
+        email: string
+        onLend: boolean
+        classRoom: { id: string; name: string }
+      }[],
     })
   }
 

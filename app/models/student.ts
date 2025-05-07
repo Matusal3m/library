@@ -30,7 +30,7 @@ export default class Student extends BaseModel {
   @column()
   declare onLend: boolean
 
-  @column()
+  @column({ serializeAs: null })
   declare classRoomId: string
 
   @belongsTo(() => ClassRoom)

@@ -38,8 +38,8 @@ export default function CreateStudentForm({
       />
 
       <FloatingInput
-        label="Quantidade"
-        name="quantity"
+        label="Número de matrícula"
+        name="enrollment_number"
         type="number"
         value={data.enrollmentNumber}
         onChange={(e) => setData('enrollmentNumber', e.target.value)}
@@ -63,7 +63,7 @@ export default function CreateStudentForm({
       />
 
       <SingleSelect
-        label="Sala de aula"
+        label="Turma"
         placeholder="Selecione uma turma"
         name="class_rooms_ids"
         options={classRooms}
