@@ -1,7 +1,7 @@
 import { useForm } from '@inertiajs/react'
 import { FormEvent } from 'react'
 import { SingleSelect } from '~/components/ui/selects'
-import { FloatingInput } from '~/components/ui/inputs'
+import { FloatingInput, PhoneInput } from '~/components/ui/inputs'
 import { Button, LoadingButton } from '~/components/ui/buttons'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import StudentsController from '#controllers/students_controller'
@@ -54,7 +54,7 @@ export default function CreateStudentForm({
         error={errors.email}
       />
 
-      <FloatingInput
+      <PhoneInput
         label="Número de telefone"
         name="phone_number"
         value={data.phoneNumber}

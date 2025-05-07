@@ -18,7 +18,7 @@ vine.messagesProvider = new SimpleMessagesProvider(
     'email.string': 'O e-mail deve ser um texto válido',
 
     'phoneNumber.required': 'O telefone é obrigatório',
-    'phoneNumber.regex': 'O telefone deve estar no formato válido (ex: +(85) 99999-9999)',
+    'phoneNumber.regex': 'O telefone deve estar no formato válido (ex: (85) 99999-9999)',
 
     'classRoomId.required': 'A turma é obrigatória',
     'classRoomId.string': 'O ID da turma deve ser um texto',
