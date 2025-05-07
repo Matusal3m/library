@@ -5,6 +5,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     { href: '/authors', label: 'Autores' },
     { href: '/books', label: 'Livros' },
     { href: '/class_rooms', label: 'Turmas' },
+    { href: '/genres', label: 'Gêneros Literários' },
   ]
 
   return (

@@ -1,26 +1,28 @@
-import ClassRoom from '#models/class_room'
+import Genre from '#models/genre'
 import type { HttpContext } from '@adonisjs/core/http'
 
-export default class ClassRoomsController {
+export default class GenresController {
   /**
    * Display a list of resource
    */
   async index({ inertia }: HttpContext) {
-    const classRooms = await ClassRoom.query().withCount('students')
+    const genres = await Genre.query().withCount('books')
 
-    const classRoomsJson = classRooms.map((classRoom) => ({
-      id: classRoom.id,
-      name: classRoom.name,
-      studentsCount: classRoom.$extras.students_count,
+    const genresJSON = genres.map((genre) => ({
+      id: genre.id,
+      name: genre.name,
+      booksCount: genre.$extras.books_count,
     }))
 
-    return inertia.render('class_rooms/index', { classRooms: classRoomsJson })
+    return inertia.render('genres/index', { genres: genresJSON })
   }
 
   /**
    * Display form to create a new record
    */
-  async create({}: HttpContext) {}
+  async create({ inertia }: HttpContext) {
+    return inertia.render('genres/create')
+  }
 
   /**
    * Handle form submission for the create action

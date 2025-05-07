@@ -3,7 +3,7 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
 export default class extends BaseSeeder {
   async run() {
-    ClassRoom.createMany([
+    ClassRoom.updateOrCreateMany('name', [
       {
         name: '1º informática',
       },

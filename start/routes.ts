@@ -11,8 +11,10 @@ import router from '@adonisjs/core/services/router'
 const BooksController = () => import('#controllers/books_controller')
 const AuthorsController = () => import('#controllers/authors_controller')
 const ClassRoomsController = () => import('#controllers/class_rooms_controller')
+const GenresController = () => import('#controllers/genres_controller')
 
 router.resource('authors', AuthorsController)
 router.resource('books', BooksController)
 router.resource('class_rooms', ClassRoomsController)
+router.resource('genres', GenresController)
 router.on('/').renderInertia('home')
