@@ -14,7 +14,7 @@ export default class ClassRoomsController {
       studentsCount: classRoom.$extras.studentsCount ?? 0,
     }))
 
-    return inertia.render('class_rooms/list', { classRooms: classRoomsJson })
+    return inertia.render('class_rooms/index', { classRooms: classRoomsJson })
   }
 
   /**

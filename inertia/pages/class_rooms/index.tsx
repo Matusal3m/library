@@ -3,7 +3,7 @@ import ClassRoomsController from '#controllers/class_rooms_controller'
 import { Link } from '@inertiajs/react'
 import { UsersIcon } from 'lucide-react'
 
-export default function ListClassRooms({
+export default function IndexClassRooms({
   classRooms,
 }: InferPageProps<ClassRoomsController, 'index'>) {
   return (
