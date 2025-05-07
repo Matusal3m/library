@@ -4,6 +4,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const items = [
     { href: '/authors', label: 'Autores' },
     { href: '/books', label: 'Livros' },
+    { href: '/class_rooms', label: 'Turmas' },
   ]
 
   return (

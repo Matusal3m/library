@@ -8,6 +8,7 @@ import { createInertiaApp } from '@inertiajs/react'
 import MainLayout from '~/layouts/main-layout'
 import { AuthorsLayout } from '~/layouts/authors-layout'
 import { BooksLayout } from '~/layouts/books-layout'
+import { ClassRoomsLayout } from '~/layouts/class-rooms-layout'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -21,11 +22,7 @@ createInertiaApp({
     let page = pages[`../pages/${name}.tsx`]
 
     //@ts-ignore
-    page.default.layout = name.startsWith('authors/')
-      ? (page: any) => <AuthorsLayout children={page} />
-      : name.startsWith('books/')
-        ? (page: any) => <BooksLayout children={page} />
-        : (page: any) => <MainLayout children={page} />
+    page.default.layout = (page: any) => swithLayout(name, page)
     return page
   },
 
@@ -33,3 +30,19 @@ createInertiaApp({
     hydrateRoot(el, <App {...props} />)
   },
 })
+
+const swithLayout = (name: string, page: any) => {
+  if (name.startsWith('books/')) {
+    return <BooksLayout children={page} />
+  }
+
+  if (name.startsWith('authors/')) {
+    return <AuthorsLayout children={page} />
+  }
+
+  if (name.startsWith('class_rooms/')) {
+    return <ClassRoomsLayout children={page} />
+  }
+
+  return <MainLayout children={page} />
+}
