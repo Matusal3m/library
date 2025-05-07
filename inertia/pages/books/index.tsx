@@ -3,7 +3,7 @@ import BooksController from '../../../app/controllers/books_controller'
 import { Link } from '@inertiajs/react'
 import { AvailableIndicator, UnavailableIndicator } from '~/components/ui/indicators'
 
-export default function ListBooks({ books }: InferPageProps<BooksController, 'index'>) {
+export default function IndexBooks({ books }: InferPageProps<BooksController, 'index'>) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
       {books.map((book) => (

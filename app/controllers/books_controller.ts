@@ -22,7 +22,7 @@ export default class BooksController {
       authors: { id: string; name: string }[]
     }[]
 
-    return inertia.render('books/list', { books: booksJson })
+    return inertia.render('books/index', { books: booksJson })
   }
 
   /**

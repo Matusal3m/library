@@ -15,7 +15,7 @@ export default class AuthorsController {
       book_count: author.$extras.books_count,
     }))
 
-    return await inertia.render('authors/list', {
+    return await inertia.render('authors/index', {
       authors: authorsWithBooksCount,
     })
   }

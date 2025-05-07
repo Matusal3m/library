@@ -2,7 +2,7 @@ import AuthorsController from '#controllers/authors_controller'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import { Link } from '@inertiajs/react'
 
-export default function ListAuthors({ authors }: InferPageProps<AuthorsController, 'index'>) {
+export default function IndexAuthors({ authors }: InferPageProps<AuthorsController, 'index'>) {
   return (
     <ul className="grid grid-cols-3 gap-4 p-2">
       {authors.map((author) => (
