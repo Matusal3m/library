@@ -3,7 +3,7 @@ import Book from '#models/book'
 import Genre from '#models/genre'
 
 import type { HttpContext } from '@adonisjs/core/http'
-import { createBookValidator } from '#validators/book'
+import { createBookValidator, updateBookValidator } from '#validators/book'
 
 export default class BooksController {
   /**
@@ -52,17 +52,60 @@ export default class BooksController {
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {}
+  async show({ params, inertia }: HttpContext) {
+    const book = await Book.findOrFail(params.id)
+
+    await book.load('authors')
+    await book.load('genres')
+
+    return inertia.render('books/show', {
+      book: book.serialize() as {
+        id: string
+        title: string
+        seducCode: string
+        genres: { id: string; name: string }[]
+        authors: { id: string; name: string }[]
+        isAvailable: boolean
+        createdAt: string
+        updatedAt: string
+        quantity: number
+      },
+    })
+  }
 
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ params, inertia }: HttpContext) {
+    const book = await Book.findOrFail(params.id)
+
+    await book.load('authors')
+    await book.load('genres')
+
+    return inertia.render('books/show', {
+      book: book.serialize() as {
+        id: string
+        title: string
+        seducCode: string
+        genres: { id: string; name: string }[]
+        authors: { id: string; name: string }[]
+        isAvailable: boolean
+        quantity: number
+      },
+    })
+  }
 
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({ params, request, response }: HttpContext) {
+    const data = await request.validateUsing(updateBookValidator)
+    const book = await Book.findOrFail(params.id)
+
+    await book.merge(data).save()
+
+    return response.redirect('/books')
+  }
 
   /**
    * Delete record

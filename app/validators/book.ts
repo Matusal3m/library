@@ -33,4 +33,12 @@ export const createBookValidator = vine.compile(
  * Validator to validate the payload when updating
  * an existing book.
  */
-export const updateBookValidator = vine.compile(vine.object({}))
+export const updateBookValidator = vine.compile(
+  vine.object({
+    title: vine.string(),
+    quantity: vine.number().positive(),
+    seducCode: vine.string(),
+    authorsIds: vine.array(vine.string()).notEmpty(),
+    genresIds: vine.array(vine.string()).notEmpty(),
+  })
+)
