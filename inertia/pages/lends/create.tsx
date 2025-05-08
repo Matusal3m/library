@@ -37,6 +37,7 @@ export default function CreateLendForm({
         onChange={(vals) => setData('bookId', vals as string)}
         value={data.bookId}
         error={errors.bookId}
+        search
       />
 
       <SingleSelect
@@ -47,6 +48,7 @@ export default function CreateLendForm({
         onChange={(vals) => setData('studentId', vals as string)}
         value={data.studentId}
         error={errors.studentId}
+        search
       />
 
       {processing ? (

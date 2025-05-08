@@ -12,6 +12,7 @@ type SingleSelectProps = {
   onChange: (value: string | number) => void
   placeholder?: string
   error?: string
+  search?: boolean
 }
 
 export function SingleSelect({
@@ -22,8 +23,10 @@ export function SingleSelect({
   onChange,
   error,
   placeholder = 'Selecione uma',
+  search,
 }: SingleSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const containerRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
@@ -34,6 +37,10 @@ export function SingleSelect({
       onChange(id)
     }
   }
+
+  const filteredOptions = options.filter((opt) =>
+    opt.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -87,19 +94,20 @@ export function SingleSelect({
 
       {isOpen && (
         <div className="relative z-50 w-full mt-1 max-h-60 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg text-sm overflow-hidden">
-          <ul className="max-h-48 overflow-y-auto">
-            {options.map((opt) => (
-              <li
-                key={opt.id}
-                onClick={() => selectOption(opt.id)}
-                className={`px-3 py-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900 ${
-                  opt.id == value ? 'bg-blue-100 dark:bg-blue-700' : ''
-                }`}
-              >
-                {opt.name}
-              </li>
-            ))}
-          </ul>
+          <div className="px-2 py-1 border-b border-gray-200 dark:border-gray-700">
+            {search ? (
+              <ItemListWithSearch
+                currentValue={value}
+                filteredOptions={filteredOptions}
+                searchInputRef={searchInputRef}
+                searchTerm={searchTerm}
+                selectOption={selectOption}
+                setSearchTerm={setSearchTerm}
+              />
+            ) : (
+              <ItemList currentValue={value} selectOption={selectOption} options={options} />
+            )}
+          </div>
         </div>
       )}
       {error && (
@@ -108,5 +116,81 @@ export function SingleSelect({
         </p>
       )}
     </div>
+  )
+}
+
+function ItemList({
+  options,
+  selectOption,
+  currentValue,
+}: {
+  options: Option[]
+  selectOption: (opt: string | number) => any
+  currentValue: any
+}) {
+  return (
+    <ul className="max-h-48 overflow-y-auto">
+      {options.map((opt) => (
+        <li
+          key={opt.id}
+          onClick={() => selectOption(opt.id)}
+          className={`px-3 py-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900 ${
+            opt.id == currentValue ? 'bg-blue-100 dark:bg-blue-700' : ''
+          }`}
+        >
+          {opt.name}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function ItemListWithSearch({
+  filteredOptions,
+  searchInputRef,
+  searchTerm,
+  selectOption,
+  setSearchTerm,
+  currentValue,
+}: {
+  searchInputRef: React.Ref<any>
+  searchTerm: string
+  setSearchTerm: (...params: any) => any
+  filteredOptions: Array<any>
+  selectOption: (opt: string | number) => any
+  currentValue: any
+}) {
+  return (
+    <>
+      <div className="px-2 py-1 border-b border-gray-200 dark:border-gray-700">
+        <input
+          type="text"
+          ref={searchInputRef}
+          className="w-full px-2 py-1 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      <ul className="max-h-48 overflow-y-auto">
+        {filteredOptions.length > 0 ? (
+          filteredOptions.map((opt) => (
+            <li
+              key={opt.id}
+              onClick={() => selectOption(opt.id)}
+              className={`px-3 py-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900 ${
+                currentValue.includes(opt.id) ? 'bg-blue-100 dark:bg-blue-700' : ''
+              }`}
+            >
+              {opt.name}
+            </li>
+          ))
+        ) : (
+          <li className="px-3 py-2 text-gray-500 dark:text-gray-400 italic">
+            Nenhuma opção encontrada
+          </li>
+        )}
+      </ul>
+    </>
   )
 }
