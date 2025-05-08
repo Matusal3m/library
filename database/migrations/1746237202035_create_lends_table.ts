@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.uuid('book_id').references('books.id')
 
       table.boolean('was_extended').defaultTo(false)
-      table.boolean('its_ongoing')
+      table.boolean('its_ongoing').defaultTo(true)
 
       table.timestamp('created_at')
       table.timestamp('extend_at')

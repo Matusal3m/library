@@ -16,6 +16,11 @@ export default class Lend extends BaseModel {
     lend.id = randomUUID()
   }
 
+  @beforeCreate()
+  static registerEndDate(lend: Lend) {
+    lend.endsAt = DateTime.now().plus({ days: 14 })
+  }
+
   @column()
   declare wasExtended: boolean
 
