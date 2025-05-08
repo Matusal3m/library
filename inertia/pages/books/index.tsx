@@ -1,14 +1,18 @@
 import { InferPageProps } from '@adonisjs/inertia/types'
 import BooksController from '../../../app/controllers/books_controller'
 import { Link } from '@inertiajs/react'
-import { AvailableIndicator, UnavailableIndicator } from '~/components/ui/indicators'
+import AvailableIndicator from '~/components/ui/indicators/available-indicator'
+import UnavailableIndicator from '~/components/ui/indicators/unavailable-indicator'
 
 export default function IndexBooks({ books }: InferPageProps<BooksController, 'index'>) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
       {books.map((book) => (
-        <div className="block h-full p-6 bg-white border border-gray-200 rounded-xl shadow-md hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 transition-all">
-          <Link href={`/books/${book.id}`} key={book.id}>
+        <div
+          key={book.id}
+          className="block h-full p-6 bg-white border border-gray-200 rounded-xl shadow-md hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800 transition-all"
+        >
+          <Link href={`/books/${book.id}`}>
             <h5 className="hover:underline  mb-3 text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
               {book.title}
             </h5>

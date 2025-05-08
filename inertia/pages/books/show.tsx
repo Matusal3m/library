@@ -1,8 +1,10 @@
 import { InferPageProps } from '@adonisjs/inertia/types'
 import BooksController from '../../../app/controllers/books_controller'
 import { Link } from '@inertiajs/react'
-import { AvailableIndicator, UnavailableIndicator } from '~/components/ui/indicators'
 import { BookOpenIcon } from 'lucide-react'
+import AvailableIndicator from '~/components/ui/indicators/available-indicator'
+import UnavailableIndicator from '~/components/ui/indicators/unavailable-indicator'
+import BooksLayout from '~/layouts/books-layout'
 
 export default function ShowBook({ book }: InferPageProps<BooksController, 'show'>) {
   return (

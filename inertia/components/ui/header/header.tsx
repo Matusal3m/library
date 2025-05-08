@@ -1,6 +1,6 @@
-import { Link } from '@inertiajs/react'
+import HeaderItem, { HeaderItemProps } from './header-item'
 
-export function Header({ items }: { items: HeaderItemProps[] }) {
+export default function Header({ items }: { items: HeaderItemProps[] }) {
   return (
     <nav className="bg-white dark:bg-gray-900 w-full border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -11,25 +11,5 @@ export function Header({ items }: { items: HeaderItemProps[] }) {
         </ul>
       </div>
     </nav>
-  )
-}
-
-export type HeaderItemProps = {
-  label: string
-  href: string
-}
-
-function HeaderItem({ href, label }: HeaderItemProps) {
-  return (
-    <li>
-      <Link
-        href={href}
-        className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 no-underline hover:underline"
-        aria-current="page"
-        method="get"
-      >
-        {label}
-      </Link>
-    </li>
   )
 }

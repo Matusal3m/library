@@ -1,10 +1,12 @@
 import { useForm } from '@inertiajs/react'
 import { FormEvent } from 'react'
-import { MultiSelect } from '~/components/ui/selects'
-import { FloatingInput } from '~/components/ui/inputs'
-import { Button, LoadingButton } from '~/components/ui/buttons'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import BooksController from '#controllers/books_controller'
+import Button from '~/components/ui/buttons/buttons'
+import LoadingButton from '~/components/ui/buttons/loading-button'
+import FloatingInput from '~/components/ui/inputs/floating-input'
+import MultiSelect from '~/components/ui/selects/multi-select'
+import BooksLayout from '~/layouts/books-layout'
 
 export default function CreateBookForm({
   authors,

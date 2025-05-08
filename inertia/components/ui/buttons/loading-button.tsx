@@ -1,24 +1,4 @@
-export function Button({
-  label,
-  onClick,
-  type,
-}: {
-  label: string
-  onClick?: (e: any) => void
-  type: 'button' | 'submit' | 'reset'
-}) {
-  return (
-    <button
-      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      onClick={onClick}
-      type={type}
-    >
-      {label}
-    </button>
-  )
-}
-
-export function LoadingButton({ label }: { label: string }) {
+export default function LoadingButton({ label }: { label: string }) {
   return (
     <button
       disabled
@@ -42,18 +22,6 @@ export function LoadingButton({ label }: { label: string }) {
           fill="currentColor"
         />
       </svg>
-      {label}
-    </button>
-  )
-}
-
-export function DisabledButton({ label }: { label: string }) {
-  return (
-    <button
-      type="button"
-      className="text-white bg-blue-400 dark:bg-blue-500 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-      disabled
-    >
       {label}
     </button>
   )

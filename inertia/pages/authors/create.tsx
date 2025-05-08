@@ -1,8 +1,8 @@
 import { useForm } from '@inertiajs/react'
 import { FormEvent } from 'react'
-import { Button, LoadingButton } from '~/components/ui/buttons'
-import { FloatingInput } from '~/components/ui/inputs'
-import MainLayout from '~/layouts/main-layout'
+import Button from '~/components/ui/buttons/buttons'
+import LoadingButton from '~/components/ui/buttons/loading-button'
+import FloatingInput from '~/components/ui/inputs/floating-input'
 
 export default function CreateAuthorForm() {
   const { data, setData, post, processing } = useForm({
@@ -37,5 +37,3 @@ export default function CreateAuthorForm() {
     </form>
   )
 }
-
-CreateAuthorForm.layout = (page: any) => <MainLayout children={page} />

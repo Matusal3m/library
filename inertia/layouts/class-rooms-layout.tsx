@@ -1,7 +1,8 @@
-import { Header, HeaderItemProps } from '~/components/ui/header'
+import Header from '~/components/ui/header/header'
+import { HeaderItemProps } from '~/components/ui/header/header-item'
 import MainLayout from './main-layout'
 
-export function ClassRoomsLayout({ children }: { children: React.ReactNode }) {
+export default function ClassRoomsLayout({ children }: { children: React.ReactNode }) {
   const items: HeaderItemProps[] = [
     {
       href: '/class_rooms',

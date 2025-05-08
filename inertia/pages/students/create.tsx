@@ -1,10 +1,13 @@
 import { useForm } from '@inertiajs/react'
 import { FormEvent } from 'react'
-import { SingleSelect } from '~/components/ui/selects'
-import { FloatingInput, PhoneInput } from '~/components/ui/inputs'
-import { Button, LoadingButton } from '~/components/ui/buttons'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import StudentsController from '#controllers/students_controller'
+import Button from '~/components/ui/buttons/buttons'
+import LoadingButton from '~/components/ui/buttons/loading-button'
+import FloatingInput from '~/components/ui/inputs/floating-input'
+import PhoneInput from '~/components/ui/inputs/phone-input'
+import { SingleSelect } from '~/components/ui/selects/single-select'
+import StudentsLayout from '~/layouts/students-layout'
 
 export default function CreateStudentForm({
   classRooms,

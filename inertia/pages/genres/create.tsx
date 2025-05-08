@@ -1,7 +1,9 @@
 import { useForm } from '@inertiajs/react'
 import { FormEvent } from 'react'
-import { Button, LoadingButton } from '~/components/ui/buttons'
-import { FloatingInput } from '~/components/ui/inputs'
+import Button from '~/components/ui/buttons/buttons'
+import LoadingButton from '~/components/ui/buttons/loading-button'
+import FloatingInput from '~/components/ui/inputs/floating-input'
+import GenresLayout from '~/layouts/genres-layout'
 
 export default function CreateGenreForm() {
   const { data, setData, post, processing } = useForm({

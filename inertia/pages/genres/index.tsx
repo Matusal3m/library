@@ -1,7 +1,8 @@
 import { InferPageProps } from '@adonisjs/inertia/types'
 import GenresController from '#controllers/genres_controller'
 import { Link } from '@inertiajs/react'
-import { BookIcon, LayersIcon } from 'lucide-react'
+import { BookIcon } from 'lucide-react'
+import GenresLayout from '~/layouts/genres-layout'
 
 export default function ListGenres({ genres }: InferPageProps<GenresController, 'index'>) {
   return (

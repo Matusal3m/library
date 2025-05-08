@@ -1,8 +1,9 @@
 import { InferPageProps } from '@adonisjs/inertia/types'
 import StudentsController from '#controllers/students_controller'
-import { AvailableIndicator, UnavailableIndicator } from '~/components/ui/indicators'
 import { Link } from '@inertiajs/react'
 import { BookCheck, BookLock } from 'lucide-react'
+import AvailableIndicator from '~/components/ui/indicators/available-indicator'
+import UnavailableIndicator from '~/components/ui/indicators/unavailable-indicator'
 
 export default function StudentsIndex({ students }: InferPageProps<StudentsController, 'index'>) {
   return (

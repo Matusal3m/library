@@ -2,6 +2,7 @@ import { InferPageProps } from '@adonisjs/inertia/types'
 import ClassRoomsController from '#controllers/class_rooms_controller'
 import { Link } from '@inertiajs/react'
 import { UsersIcon } from 'lucide-react'
+import ClassRoomsLayout from '~/layouts/class-rooms-layout'
 
 export default function IndexClassRooms({
   classRooms,
