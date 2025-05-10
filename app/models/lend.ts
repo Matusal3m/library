@@ -21,10 +21,18 @@ export default class Lend extends BaseModel {
     lend.endsAt = DateTime.now().plus({ days: 14 })
   }
 
-  @column()
+  @column({
+    serialize(value) {
+      return value === 1
+    },
+  })
   declare wasExtended: boolean
 
-  @column()
+  @column({
+    serialize(value) {
+      return value === 1
+    },
+  })
   declare itsOngoing: boolean
 
   @column()

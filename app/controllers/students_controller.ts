@@ -8,10 +8,12 @@ export default class StudentsController {
    * Display a list of resource
    */
   async index({ inertia }: HttpContext) {
-    const students = await Student.query().preload('classRoom')
+    const students = await Student.query().preload('classRoom', (query) => {
+      query.select('id', 'name')
+    })
 
     return inertia.render('students/index', {
-      students: students.map((student) => student.serialize()) as {
+      students: students as {
         id: string
         name: string
         enrollmentNumber: number
@@ -46,7 +48,40 @@ export default class StudentsController {
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {}
+  async show({ params, inertia }: HttpContext) {
+    const student = await Student.query()
+      .where('id', params.id)
+      .preload('classRoom')
+      .preload('lend', (query) => {
+        query.preload('book').orderBy('created_at', 'desc').first()
+      })
+      .firstOrFail()
+
+    return inertia.render('students/show', {
+      student: student as any as {
+        id: string
+        name: string
+        enrollmentNumber: number
+        phoneNumber: string
+        email: string
+        classRoom: { id: string; name: string }
+        lend: {
+          id: string
+          createdAt: string
+          extendedAt: string
+          endsAt: string
+          returnedAt: string
+          itsOngoing: boolean
+          wasExtended: boolean
+          book: {
+            id: string
+            title: string
+            seducCode: string
+          }
+        }
+      },
+    })
+  }
 
   /**
    * Edit individual record

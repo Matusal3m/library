@@ -25,7 +25,11 @@ export default class Book extends BaseModel {
   @column()
   declare quantity: number
 
-  @column()
+  @column({
+    serialize(value) {
+      return value === 1
+    },
+  })
   declare isAvailable: boolean
 
   @manyToMany(() => Author, {

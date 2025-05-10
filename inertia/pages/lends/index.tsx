@@ -57,7 +57,7 @@ export default function LendsIndex({ lends }: InferPageProps<LendsController, 'i
             </div>
 
             <div className="flex items-center flex-wrap gap-2 text-xs">
-              {!!lend.itsOngoing && !lend.returnedAt ? (
+              {lend.itsOngoing && !lend.returnedAt ? (
                 <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
                   Em andamento
                 </span>
@@ -67,7 +67,7 @@ export default function LendsIndex({ lends }: InferPageProps<LendsController, 'i
                   Devolvido
                 </span>
               )}
-              {!!lend.wasExtended && (
+              {lend.wasExtended && (
                 <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full flex items-center gap-1">
                   <RotateCwIcon className="w-3 h-3" />
                   Prorrogado

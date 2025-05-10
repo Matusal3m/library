@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column, hasOne } from '@adonisjs/lucid/orm'
 import ClassRoom from './class_room.js'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
 import { randomUUID } from 'node:crypto'
+import Lend from './lend.js'
 
 export default class Student extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -27,11 +28,18 @@ export default class Student extends BaseModel {
   @column()
   declare enrollmentNumber: number
 
-  @column()
+  @column({
+    serialize(value) {
+      return value === 1
+    },
+  })
   declare onLend: boolean
 
-  @column({ serializeAs: null })
+  @column()
   declare classRoomId: string
+
+  @hasOne(() => Lend)
+  declare lend: HasOne<typeof Lend>
 
   @belongsTo(() => ClassRoom)
   declare classRoom: BelongsTo<typeof ClassRoom>
