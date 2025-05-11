@@ -2,7 +2,6 @@ import { InferPageProps } from '@adonisjs/inertia/types'
 import StudentsController from '#controllers/students_controller'
 import { BookOpen, School, UserRound, Info, Phone, Mail } from 'lucide-react'
 import { Link } from '@inertiajs/react'
-import { formatDate } from '~/utils/format_date'
 
 export default function StudentShow({ student }: InferPageProps<StudentsController, 'show'>) {
   const lend = student.lend
@@ -65,11 +64,11 @@ export default function StudentShow({ student }: InferPageProps<StudentsControll
               <strong>Código Seduc:</strong> {lend.book.seducCode}
             </li>
             <li>
-              <strong>Retirado em:</strong> {formatDate(lend.createdAt)}
+              <strong>Retirado em:</strong> {lend.createdAt}
             </li>
             <li>
               <strong>{ongoing ? 'Devolver até:' : 'Devolvido em:'}</strong>{' '}
-              {formatDate(ongoing ? lend.endsAt : lend.returnedAt)}
+              {ongoing ? lend.endsAt : lend.returnedAt}
             </li>
 
             {lend.wasExtended && (

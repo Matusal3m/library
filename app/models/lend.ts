@@ -47,15 +47,32 @@ export default class Lend extends BaseModel {
   @belongsTo(() => Book)
   declare book: BelongsTo<typeof Book>
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare createdAt: DateTime
 
-  @column.dateTime()
+  @column.dateTime({
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare extendedAt: DateTime
 
-  @column.dateTime()
+  @column.dateTime({
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare endsAt: DateTime
 
-  @column.dateTime()
+  @column.dateTime({
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare returnedAt: DateTime
 }

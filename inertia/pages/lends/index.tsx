@@ -50,11 +50,11 @@ export default function LendsIndex({ lends }: InferPageProps<LendsController, 'i
             <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400 mb-3">
               <div className="flex items-center gap-2">
                 <CalendarIcon className="w-4 h-4" />
-                Empréstimo em: {new Date(lend.createdAt).toLocaleDateString()}
+                Empréstimo em: {lend.createdAt}
               </div>
               <div className="flex items-center gap-2">
                 <ClockIcon className="w-4 h-4" />
-                Devolução prevista: {new Date(lend.endsAt).toLocaleDateString()}
+                Devolução prevista: {lend.endsAt}
               </div>
             </div>
 
@@ -80,7 +80,7 @@ export default function LendsIndex({ lends }: InferPageProps<LendsController, 'i
             <div className="my-2 flex">
               {lend.itsOngoing && !lend.wasExtended && (
                 <Link
-                  className="h-8 px-4 rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200 flex justify-center items-center"
+                  className="flex justify-center items-center  h-8 px-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                   method="post"
                   href={`/lends/${lend.id}/extend`}
                   as="button"
@@ -91,7 +91,7 @@ export default function LendsIndex({ lends }: InferPageProps<LendsController, 'i
               )}
               {lend.itsOngoing && (
                 <Link
-                  className="h-8 px-4 rounded-md text-white bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors duration-200 flex justify-center items-center"
+                  className="flex justify-center items-center  h-8 px-4 text-white rounded-md bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors duration-200 focus:ring-4 font-medium rounded-lg text-sm me-2"
                   method="post"
                   href={`/lends/${lend.id}/finish`}
                   as="button"

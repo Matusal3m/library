@@ -28,7 +28,7 @@ export default function AuthorBookListItem({
       </div>
 
       <div className="text-sm text-gray-600 dark:text-gray-400">
-        <p>Adicionado em: {new Date(book.createdAt).toLocaleDateString()}</p>
+        <p>Adicionado em: {book.createdAt}</p>
       </div>
     </div>
   )

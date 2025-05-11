@@ -44,9 +44,20 @@ export default class Student extends BaseModel {
   @belongsTo(() => ClassRoom)
   declare classRoom: BelongsTo<typeof ClassRoom>
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare updatedAt: DateTime
 }

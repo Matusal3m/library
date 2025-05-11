@@ -25,9 +25,20 @@ export default class ClassRoom extends BaseModel {
   @hasManyThrough([() => Book, () => Student])
   declare books: HasManyThrough<typeof Book>
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    serialize(value) {
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+    },
+  })
   declare updatedAt: DateTime
 }
