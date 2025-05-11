@@ -1,4 +1,10 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
+// import { LendMessagesProvider } from './custom-messages/lend.js'
+
+vine.messagesProvider = new SimpleMessagesProvider({
+  'bookId.database.unique': 'Este livro já está emprestado a outro aluno.',
+  'studentId.database.unique': 'Este aluno já possui um livro emprestado.',
+})
 
 /**
  * Validator to validate the payload when creating
@@ -6,13 +12,19 @@ import vine from '@vinejs/vine'
  */
 export const createLendValidator = vine.compile(
   vine.object({
-    studentId: vine.string().exists({ table: 'students', column: 'id' }),
-    bookId: vine.string().exists({ table: 'books', column: 'id' }),
+    studentId: vine.string().unique(async (db, value) => {
+      const student = await db
+        .from('students')
+        .where('id', value)
+        .andWhere('on_lend', false)
+        .first()
+
+      return !!student
+    }),
+    bookId: vine.string().unique(async (db, value) => {
+      const book = await db.from('books').where('id', value).andWhere('is_available', true).first()
+
+      return !!book
+    }),
   })
 )
-
-/**
- * Validator to validate the payload when updating
- * an existing lend.
- */
-export const updateLendValidator = vine.compile(vine.object({}))

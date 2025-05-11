@@ -49,7 +49,8 @@ export default class LendsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const { bookId, studentId } = await request.validateUsing(createLendValidator)
+    const { bookId, studentId } = await createLendValidator.validate(request.all())
+    // const { bookId, studentId } = await request.validateUsing(createLendValidator)
 
     const book = await Book.findOrFail(bookId)
     const student = await Student.findOrFail(studentId)
