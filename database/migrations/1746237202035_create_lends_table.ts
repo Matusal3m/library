@@ -14,7 +14,7 @@ export default class extends BaseSchema {
       table.boolean('its_ongoing').defaultTo(true)
 
       table.timestamp('created_at')
-      table.timestamp('extend_at')
+      table.timestamp('extended_at')
       table.timestamp('ends_at')
       table.timestamp('returned_at')
     })

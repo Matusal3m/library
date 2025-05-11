@@ -20,6 +20,9 @@ router.resource('books', BooksController)
 router.resource('class_rooms', ClassRoomsController)
 router.resource('genres', GenresController)
 router.resource('students', StudentsController)
-router.resource('lends', LendsController)
+router.resource('lends', LendsController).except(['edit', 'update', 'destroy', 'show'])
+
+router.post('lends/:id/extend', [LendsController, 'extend'])
+router.post('lends/:id/finish', [LendsController, 'finish'])
 
 router.on('/').renderInertia('home')

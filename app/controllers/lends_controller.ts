@@ -3,6 +3,7 @@ import Lend from '#models/lend'
 import Student from '#models/student'
 import { createLendValidator } from '#validators/lend'
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 
 export default class LendsController {
   /**
@@ -18,7 +19,7 @@ export default class LendsController {
       })
 
     return inertia.render('lends/index', {
-      lends,
+      lends: lends.map((lend) => lend.serialize()),
     })
   }
   /**
@@ -66,18 +67,33 @@ export default class LendsController {
    */
   async show({ params }: HttpContext) {}
 
-  /**
-   * Edit individual record
-   */
-  async edit({ params }: HttpContext) {}
+  async extend({ params, response }: HttpContext) {
+    const lend = await Lend.findOrFail(params.id)
 
-  /**
-   * Handle form submission for the edit action
-   */
-  async update({ params, request }: HttpContext) {}
+    lend.extendedAt = DateTime.now()
+    lend.wasExtended = true
+    lend.endsAt = lend.extendedAt.plus({ days: 14 })
 
-  /**
-   * Delete record
-   */
-  async destroy({ params }: HttpContext) {}
+    await lend.save()
+
+    return response.redirect('/lends')
+  }
+
+  async finish({ params, response }: HttpContext) {
+    const lend = await Lend.findOrFail(params.id)
+
+    await lend.load('student')
+    await lend.load('book')
+
+    lend.returnedAt = DateTime.now()
+    lend.itsOngoing = false
+    lend.student.onLend = false
+    lend.book.isAvailable = true
+
+    await lend.save()
+    await lend.student.save()
+    await lend.book.save()
+
+    return response.redirect('/lends')
+  }
 }
