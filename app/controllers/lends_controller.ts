@@ -5,7 +5,6 @@ import { createLendValidator, lendFilterValidator } from '#validators/lend'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
-import logger from '@adonisjs/core/services/logger'
 import ClassRoom from '#models/class_room'
 
 @inject()
@@ -62,8 +61,6 @@ export default class LendsController {
 
     const lends = await query.exec()
     const classRooms = await ClassRoom.all()
-
-    logger.info(query.toSQL())
 
     return inertia.render('lends/index', {
       lends: lends.map((lend) => lend.serialize()),
