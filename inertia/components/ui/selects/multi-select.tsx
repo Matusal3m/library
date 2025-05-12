@@ -108,7 +108,7 @@ export default function MultiSelect({
       </div>
 
       {isOpen && (
-        <div className="relative z-50 w-full mt-1 max-h-60 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg text-sm overflow-hidden">
+        <div className="absolute z-50 w-full mt-1 max-h-60 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg text-sm overflow-hidden">
           <div className="px-2 py-1 border-b border-gray-200 dark:border-gray-700">
             <input
               type="text"
