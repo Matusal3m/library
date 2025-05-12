@@ -57,7 +57,7 @@ export default class Lend extends BaseModel {
 
   @column.dateTime({
     serialize(value) {
-      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+      return value ? DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT) : value
     },
   })
   declare extendedAt: DateTime
@@ -71,7 +71,7 @@ export default class Lend extends BaseModel {
 
   @column.dateTime({
     serialize(value) {
-      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+      return value ? DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT) : value
     },
   })
   declare returnedAt: DateTime
