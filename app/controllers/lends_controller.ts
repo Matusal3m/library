@@ -1,27 +1,76 @@
 import Book from '#models/book'
 import Lend from '#models/lend'
 import Student from '#models/student'
-import { createLendValidator } from '#validators/lend'
+import { createLendValidator, lendFilterValidator } from '#validators/lend'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
+import logger from '@adonisjs/core/services/logger'
+import ClassRoom from '#models/class_room'
 
+@inject()
 export default class LendsController {
   /**
    * Display a list of resource
    */
-  async index({ inertia }: HttpContext) {
-    const lends = await Lend.query()
-      .preload('book', (query) => {
-        query.select('id', 'title', 'seduc_code')
-      })
-      .preload('student', (query) => {
-        query.select('id', 'name', 'enrollment_number')
-      })
+  async index({ inertia, request }: HttpContext) {
+    const { direction, orderBy, where } = await request.validateUsing(lendFilterValidator)
+
+    const query = Lend.query()
+      .preload('book', (q) => q.select('id', 'title', 'seduc_code'))
+      .preload('student', (q) => q.select('id', 'name', 'enrollment_number'))
+      .as('students')
+
+    const { wasExtended, itsOngoing, itsLate, classRoomsIds } = where || {}
+
+    const hasFilters =
+      wasExtended !== 'any' ||
+      itsOngoing !== 'any' ||
+      itsLate !== 'any' ||
+      (classRoomsIds && classRoomsIds.length > 0)
+
+    if (hasFilters) {
+      if (wasExtended && wasExtended !== 'any') {
+        query.where('was_extended', wasExtended)
+      }
+
+      if (itsOngoing && itsOngoing !== 'any') {
+        query.where('its_ongoing', itsOngoing)
+      }
+
+      if (itsLate && itsLate !== 'any') {
+        const operator = itsLate ? '<' : '>'
+        query.where((subquery) => {
+          subquery
+            .where((sq) => {
+              sq.where('ends_at', operator, Date.now()).andWhereNull('returned_at')
+            })
+            .orWhereColumn('ends_at', operator, 'returned_at')
+        })
+      }
+
+      if (classRoomsIds && classRoomsIds.length > 0) {
+        classRoomsIds.forEach((classRoomId) => {
+          query.whereHas('student', (studentQuery) => {
+            studentQuery.where('class_room_id', classRoomId)
+          })
+        })
+      }
+    }
+
+    query.orderBy(orderBy || 'created_at', direction || 'desc')
+
+    const lends = await query.exec()
+    const classRooms = await ClassRoom.all()
+
+    logger.info(query.toSQL())
 
     return inertia.render('lends/index', {
       lends: lends.map((lend) => lend.serialize()),
+      classRooms: classRooms.map((c) => c.serialize()) as { id: string; name: string }[],
     })
   }
+
   /**
    * Display form to create a new record
    */
@@ -50,7 +99,6 @@ export default class LendsController {
    */
   async store({ request, response }: HttpContext) {
     const { bookId, studentId } = await createLendValidator.validate(request.all())
-    // const { bookId, studentId } = await request.validateUsing(createLendValidator)
 
     const book = await Book.findOrFail(bookId)
     const student = await Student.findOrFail(studentId)
@@ -62,11 +110,6 @@ export default class LendsController {
 
     return response.redirect('/lends')
   }
-
-  /**
-   * Show individual record
-   */
-  async show({ params }: HttpContext) {}
 
   async extend({ params, response }: HttpContext) {
     const lend = await Lend.findOrFail(params.id)

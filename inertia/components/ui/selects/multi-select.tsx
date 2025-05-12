@@ -8,8 +8,8 @@ type MultiSelectProps = {
   label?: string
   name: string
   options: Option[]
-  value: (string | number)[]
-  onChange: (value: (string | number)[]) => void
+  value: any
+  onChange: (value: any) => void
   placeholder?: string
   error?: string
 }

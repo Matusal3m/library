@@ -28,3 +28,18 @@ export const createLendValidator = vine.compile(
     }),
   })
 )
+
+export const lendFilterValidator = vine.compile(
+  vine.object({
+    where: vine
+      .object({
+        wasExtended: vine.unionOfTypes([vine.boolean(), vine.string()]),
+        itsOngoing: vine.unionOfTypes([vine.boolean(), vine.string()]),
+        itsLate: vine.unionOfTypes([vine.boolean(), vine.string()]),
+        classRoomsIds: vine.array(vine.string()),
+      })
+      .optional(),
+    orderBy: vine.enum(['created_at', 'ends_at', 'extended_at', 'returned_at']).optional(),
+    direction: vine.enum(['asc', 'desc']).optional(),
+  })
+)

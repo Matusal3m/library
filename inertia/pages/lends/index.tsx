@@ -1,6 +1,6 @@
 import { InferPageProps } from '@adonisjs/inertia/types'
 import LendsController from '#controllers/lends_controller'
-import { Link, router } from '@inertiajs/react'
+import { Link, router, useForm } from '@inertiajs/react'
 import {
   BookIcon,
   CalendarIcon,
@@ -9,14 +9,185 @@ import {
   CheckIcon,
   RotateCwIcon,
   BookUser,
+  FilterIcon,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react'
+import Checkbox from '~/components/ui/inputs/checkbox'
+import { SingleSelect } from '~/components/ui/selects/single-select'
+import Radio from '~/components/ui/inputs/radio'
+import Button from '~/components/ui/buttons/buttons'
+import { useState } from 'react'
+import MultiSelect from '~/components/ui/selects/multi-select'
 
-export default function LendsIndex({ lends }: InferPageProps<LendsController, 'index'>) {
+export default function LendsIndex({
+  lends,
+  classRooms,
+}: InferPageProps<LendsController, 'index'>) {
+  const [showFilters, setShowFilters] = useState(false)
+
+  const resetFilters = () => {
+    setData('where.itsLate', 'any')
+    setData('where.wasExtended', 'any')
+    setData('where.itsOngoing', 'any')
+    setData('where.classRoomsIds', [])
+    router.visit('/lends', { only: ['lends'] })
+  }
+
   const partialReloadPage = () => router.reload({ only: ['lends'] })
+
+  const { data, setData } = useForm({
+    where: {
+      itsOngoing: 'any' as boolean | 'any',
+      wasExtended: 'any' as boolean | 'any',
+      itsLate: 'any' as boolean | 'any',
+      classRoomsIds: [] as string[],
+    },
+    orderBy: 'created_at',
+    direction: 'asc',
+  })
+
+  const optionsToOrderBy = [
+    { id: 'created_at', name: 'Criação' },
+    { id: 'ends_at', name: 'Data de devolução' },
+    { id: 'extended_at', name: 'Data de extensão' },
+    { id: 'returned_at', name: 'Data de devolução' },
+  ]
+
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    router.reload({ only: ['lends'], data, replace: true })
+  }
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Empréstimos</h1>
+
+      <div className="mb-4 flex justify-between items-center">
+        <button
+          type="button"
+          onClick={() => setShowFilters((prev) => !prev)}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition"
+        >
+          <FilterIcon className="w-4 h-4" />
+          {showFilters ? 'Esconder Filtros' : 'Mostrar Filtros'}
+          {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+      </div>
+
+      {showFilters && (
+        <form onSubmit={submit} className="mb-8">
+          <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-sm rounded-xl p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <FilterIcon className="w-5 h-5" />
+              Filtros
+            </h2>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-col justify-start">
+                    <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
+                      Incluir
+                    </h5>
+
+                    <Checkbox
+                      label="Prorrogados"
+                      checked={data.where.wasExtended === 'any' ? false : data.where.wasExtended}
+                      onChange={(value) => setData('where.wasExtended', value)}
+                    />
+                    <Checkbox
+                      label="Atrasados"
+                      checked={data.where.itsLate === 'any' ? false : data.where.itsLate}
+                      onChange={(value) => setData('where.itsLate', value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col justify-start">
+                    <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
+                      Apenas
+                    </h5>
+                    <Radio
+                      label="Devolvido"
+                      name="itsOngoing"
+                      value={false}
+                      data={data.where.itsOngoing}
+                      onChange={(value) => setData('where.itsOngoing', value)}
+                    />
+                    <Radio
+                      label="Em andamento"
+                      name="itsOngoing"
+                      value={true}
+                      data={data.where.itsOngoing}
+                      onChange={(value) => setData('where.itsOngoing', value)}
+                    />
+                    <Radio
+                      label="Sem preferência"
+                      name="itsOngoing"
+                      value={'any'}
+                      data={data.where.itsOngoing}
+                      onChange={(value) => setData('where.itsOngoing', value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col col-span-2">
+                    <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
+                      Turmas
+                    </h5>
+                    <MultiSelect
+                      name="classRooms"
+                      options={classRooms}
+                      value={data.where.classRoomsIds}
+                      onChange={(vals) => setData('where.classRoomsIds', vals)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <SingleSelect
+                  options={optionsToOrderBy}
+                  placeholder="Selecionar forma de ordenação"
+                  name="order_by_fields"
+                  onChange={(vals) => setData('orderBy', vals as string)}
+                  value={data.orderBy}
+                />
+
+                <div className="flex flex-col">
+                  <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
+                    Ordem:
+                  </h5>
+                  <div className="flex gap-4">
+                    <Radio
+                      label="Crescente"
+                      name="direction"
+                      onChange={(value) => setData('direction', value as string)}
+                      data={data.direction}
+                      value="asc"
+                    />
+                    <Radio
+                      label="Decrescente"
+                      name="direction"
+                      onChange={(value) => setData('direction', value as string)}
+                      data={data.direction}
+                      value="desc"
+                    />
+                  </div>
+
+                  <div className="pt-4 flex justify-end items-center">
+                    <Button type="submit" label="Filtrar" className="w-full sm:w-auto" />
+                    <Button
+                      type="button"
+                      onClick={() => resetFilters()}
+                      label="Limpar filtros"
+                      className="w-full sm:w-auto"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {lends.map((lend) => (
