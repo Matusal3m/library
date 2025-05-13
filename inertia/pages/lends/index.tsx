@@ -12,11 +12,12 @@ import {
   FilterIcon,
   ChevronDown,
   ChevronUp,
+  PlusIcon,
 } from 'lucide-react'
 import Checkbox from '~/components/ui/inputs/checkbox'
 import { SingleSelect } from '~/components/ui/selects/single-select'
 import Radio from '~/components/ui/inputs/radio'
-import Button from '~/components/ui/buttons/buttons'
+import Button from '~/components/ui/buttons/button'
 import { useState } from 'react'
 import MultiSelect from '~/components/ui/selects/multi-select'
 
@@ -24,18 +25,6 @@ export default function LendsIndex({
   lends,
   classRooms,
 }: InferPageProps<LendsController, 'index'>) {
-  const [showFilters, setShowFilters] = useState(false)
-
-  const resetFilters = () => {
-    setData('where.itsLate', 'any')
-    setData('where.wasExtended', 'any')
-    setData('where.itsOngoing', 'any')
-    setData('where.classRoomsIds', [])
-    router.visit('/lends', { only: ['lends'] })
-  }
-
-  const partialReloadPage = () => router.reload({ only: ['lends'] })
-
   const { data, setData } = useForm({
     where: {
       itsOngoing: 'any' as boolean | 'any',
@@ -47,11 +36,37 @@ export default function LendsIndex({
     direction: 'asc',
   })
 
+  const [showFilters, setShowFilters] = useState(false)
+
+  const resetFilters = () => {
+    setData('where.itsLate', 'any')
+    setData('where.wasExtended', 'any')
+    setData('where.itsOngoing', 'any')
+    setData('where.classRoomsIds', [])
+    router.visit('/lends', { only: ['lends'] })
+  }
+
+  const handleCreateDocument = () => {
+    const params = new URLSearchParams()
+
+    params.append('itsLate', String(data.where.itsLate))
+    params.append('wasExtended', String(data.where.wasExtended))
+    params.append('itsOngoing', String(data.where.itsOngoing))
+
+    data.where.classRoomsIds.forEach((id) => params.append('classRoomsIds[]', id))
+
+    const url = `/lends/document?${params.toString()}`
+    window.location.href = url
+  }
+
+  const partialReloadPage = () => router.reload({ only: ['lends'] })
+
   const optionsToOrderBy = [
     { id: 'created_at', name: 'Criação' },
     { id: 'ends_at', name: 'Data de devolução' },
     { id: 'extended_at', name: 'Data de extensão' },
     { id: 'returned_at', name: 'Data de devolução' },
+    { id: 'students.name', name: 'Nome do aluno' },
   ]
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -72,6 +87,14 @@ export default function LendsIndex({
           <FilterIcon className="w-4 h-4" />
           {showFilters ? 'Esconder Filtros' : 'Mostrar Filtros'}
           {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+        <button
+          type="button"
+          onClick={handleCreateDocument}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
+        >
+          <PlusIcon className="w-4 h-4" />
+          Criar Documento baseado nos filtros
         </button>
       </div>
 

@@ -2,7 +2,7 @@ import LendsController from '#controllers/lends_controller'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import { useForm } from '@inertiajs/react'
 import { FormEvent } from 'react'
-import Button from '~/components/ui/buttons/buttons'
+import Button from '~/components/ui/buttons/button'
 import LoadingButton from '~/components/ui/buttons/loading-button'
 import { SingleSelect } from '~/components/ui/selects/single-select'
 

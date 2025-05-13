@@ -36,10 +36,12 @@ export const lendFilterValidator = vine.compile(
         wasExtended: vine.unionOfTypes([vine.boolean(), vine.string()]),
         itsOngoing: vine.unionOfTypes([vine.boolean(), vine.string()]),
         itsLate: vine.unionOfTypes([vine.boolean(), vine.string()]),
-        classRoomsIds: vine.array(vine.string()),
+        classRoomsIds: vine.array(vine.string()).optional(),
       })
       .optional(),
-    orderBy: vine.enum(['created_at', 'ends_at', 'extended_at', 'returned_at']).optional(),
+    orderBy: vine
+      .enum(['created_at', 'ends_at', 'extended_at', 'returned_at', 'students.name'])
+      .optional(),
     direction: vine.enum(['asc', 'desc']).optional(),
   })
 )

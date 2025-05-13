@@ -6,60 +6,26 @@ import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import ClassRoom from '#models/class_room'
+import { LendsFilterService } from '#services/lends_filter_service'
+import { DocumentGeneratorService } from '#services/document_generator_service'
+import { rmSync } from 'node:fs'
+import logger from '@adonisjs/core/services/logger'
 
 @inject()
 export default class LendsController {
+  constructor(
+    private lendsFilter: LendsFilterService,
+    private documentGenerator: DocumentGeneratorService
+  ) {}
+
   /**
    * Display a list of resource
    */
   async index({ inertia, request }: HttpContext) {
-    const { direction, orderBy, where } = await request.validateUsing(lendFilterValidator)
+    const filterOptions = await request.validateUsing(lendFilterValidator)
 
-    const query = Lend.query()
-      .preload('book', (q) => q.select('id', 'title', 'seduc_code'))
-      .preload('student', (q) => q.select('id', 'name', 'enrollment_number'))
-      .as('students')
+    const lends = await this.lendsFilter.filter(filterOptions)
 
-    const { wasExtended, itsOngoing, itsLate, classRoomsIds } = where || {}
-
-    const hasFilters =
-      wasExtended !== 'any' ||
-      itsOngoing !== 'any' ||
-      itsLate !== 'any' ||
-      (classRoomsIds && classRoomsIds.length > 0)
-
-    if (hasFilters) {
-      if (wasExtended && wasExtended !== 'any') {
-        query.where('was_extended', wasExtended)
-      }
-
-      if (itsOngoing && itsOngoing !== 'any') {
-        query.where('its_ongoing', itsOngoing)
-      }
-
-      if (itsLate && itsLate !== 'any') {
-        const operator = itsLate ? '<' : '>'
-        query.where((subquery) => {
-          subquery
-            .where((sq) => {
-              sq.where('ends_at', operator, Date.now()).andWhereNull('returned_at')
-            })
-            .orWhereColumn('ends_at', operator, 'returned_at')
-        })
-      }
-
-      if (classRoomsIds && classRoomsIds.length > 0) {
-        classRoomsIds.forEach((classRoomId) => {
-          query.whereHas('student', (studentQuery) => {
-            studentQuery.where('class_room_id', classRoomId)
-          })
-        })
-      }
-    }
-
-    query.orderBy(orderBy || 'created_at', direction || 'desc')
-
-    const lends = await query.exec()
     const classRooms = await ClassRoom.all()
 
     return inertia.render('lends/index', {
@@ -136,5 +102,37 @@ export default class LendsController {
     await lend.book.save()
 
     return response.redirect('/lends')
+  }
+
+  async document({ request, response }: HttpContext) {
+    const filterOptions = await request.validateUsing(lendFilterValidator)
+
+    const lends = await this.lendsFilter.filter(filterOptions, { loadStudentsClassRooms: true })
+
+    const data = lends.map((lend) => {
+      //@ts-ignore
+      lend = lend.serialize()
+
+      return [
+        lend.student.name,
+        lend.student.classRoom.name,
+        lend.student.enrollmentNumber,
+        lend.book.title,
+        lend.book.seducCode,
+        lend.createdAt,
+        lend.endsAt,
+      ]
+    })
+
+    const { path } = await this.documentGenerator.generate(
+      ['Aluno', 'Turma', 'N. de Matrícula', 'Livro', 'Cód. da Seduc', 'Início', 'Término'],
+      data
+    )
+
+    response.onFinish(() => {
+      rmSync(path)
+    })
+
+    return response.attachment(path, 'relatorio-de-emprestimos.pdf')
   }
 }

@@ -24,5 +24,6 @@ router.resource('lends', LendsController).except(['edit', 'update', 'destroy', '
 
 router.post('lends/:id/extend', [LendsController, 'extend'])
 router.post('lends/:id/finish', [LendsController, 'finish'])
+router.get('lends/document', [LendsController, 'document'])
 
 router.on('/').renderInertia('home')
