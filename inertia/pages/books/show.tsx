@@ -1,6 +1,8 @@
 import { InferPageProps } from '@adonisjs/inertia/types'
 import BooksController from '../../../app/controllers/books_controller'
 import { Link } from '@inertiajs/react'
+import AvailableIndicator from '~/components/ui/indicators/available-indicator'
+import UnavailableIndicator from '~/components/ui/indicators/unavailable-indicator'
 
 export default function ShowBook({ book }: InferPageProps<BooksController, 'show'>) {
   return (
@@ -36,6 +38,27 @@ export default function ShowBook({ book }: InferPageProps<BooksController, 'show
               >
                 {genre.name}
               </Link>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Réplicas</h2>
+          <div className="flex flex-col gap-2">
+            {book.replicas.map((replica) => (
+              <div
+                key={replica.id}
+                className="flex items-center justify-between px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 hover:shadow-sm transition-shadow"
+              >
+                <span className="text-blue-700 dark:text-blue-300 font-mono underline">
+                  {replica.seducCode}
+                </span>
+                {replica.isAvailable ? (
+                  <AvailableIndicator message="Disponível" />
+                ) : (
+                  <UnavailableIndicator message="Indisponível" />
+                )}
+              </div>
             ))}
           </div>
         </div>

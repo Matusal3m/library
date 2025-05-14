@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import Student from './student.js'
-import Book from './book.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { randomUUID } from 'node:crypto'
+import BookReplica from './book_replica.js'
 
 export default class Lend extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -39,13 +39,13 @@ export default class Lend extends BaseModel {
   declare studentId: string
 
   @column()
-  declare bookId: string
+  declare bookReplicaId: string
 
   @belongsTo(() => Student)
   declare student: BelongsTo<typeof Student>
 
-  @belongsTo(() => Book)
-  declare book: BelongsTo<typeof Book>
+  @belongsTo(() => BookReplica)
+  declare bookReplica: BelongsTo<typeof BookReplica>
 
   @column.dateTime({
     autoCreate: true,

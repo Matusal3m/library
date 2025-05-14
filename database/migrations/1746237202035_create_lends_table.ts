@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.uuid('id').primary()
 
       table.uuid('student_id').references('students.id')
-      table.uuid('book_id').references('books.id')
+      table.uuid('book_replica_id').references('book_replicas.id')
 
       table.boolean('was_extended').defaultTo(false)
       table.boolean('its_ongoing').defaultTo(true)

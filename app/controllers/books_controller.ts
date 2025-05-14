@@ -5,6 +5,17 @@ import Genre from '#models/genre'
 import type { HttpContext } from '@adonisjs/core/http'
 import { createBookValidator, updateBookValidator } from '#validators/book'
 
+type SerializedBookWithReplicas = {
+  id: string
+  title: string
+  genres: { id: string; name: string }[]
+  authors: { id: string; name: string }[]
+  replicas: { id: string; seducCode: string; isAvailable: string }[]
+  quantity: number
+  createdAt: string
+  updatedAt: string
+}
+
 export default class BooksController {
   /**
    * Display a list of resource
@@ -54,16 +65,17 @@ export default class BooksController {
 
     await book.load('authors')
     await book.load('genres')
+    await book.load('replicas')
+
+    await book.loadCount('replicas')
+
+    const bookJson = book.serialize()
 
     return inertia.render('books/show', {
-      book: book.serialize() as {
-        id: string
-        title: string
-        genres: { id: string; name: string }[]
-        authors: { id: string; name: string }[]
-        createdAt: string
-        updatedAt: string
-      },
+      book: {
+        ...bookJson,
+        quantity: book.$extras.replicas_count,
+      } as SerializedBookWithReplicas,
     })
   }
 

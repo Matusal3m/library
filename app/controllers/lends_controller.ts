@@ -9,7 +9,7 @@ import ClassRoom from '#models/class_room'
 import { LendsFilterService } from '#services/lends_filter_service'
 import { DocumentGeneratorService } from '#services/document_generator_service'
 import { rmSync } from 'node:fs'
-import logger from '@adonisjs/core/services/logger'
+import BookReplica from '#models/book_replica'
 
 @inject()
 export default class LendsController {
@@ -61,14 +61,14 @@ export default class LendsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const { bookId, studentId } = await createLendValidator.validate(request.all())
+    const { bookReplicaId, studentId } = await createLendValidator.validate(request.all())
 
-    const book = await Book.findOrFail(bookId)
+    const bookReplica = await BookReplica.findOrFail(bookReplicaId)
     const student = await Student.findOrFail(studentId)
 
-    await Lend.create({ bookId, studentId })
+    await Lend.create({ bookReplicaId, studentId })
 
-    book.merge({ isAvailable: false }).save()
+    bookReplica.merge({ isAvailable: false }).save()
     student.merge({ onLend: true }).save()
 
     return response.redirect('/lends')
@@ -90,16 +90,16 @@ export default class LendsController {
     const lend = await Lend.findOrFail(params.id)
 
     await lend.load('student')
-    await lend.load('book')
+    await lend.load('bookReplica')
 
     lend.returnedAt = DateTime.now()
     lend.itsOngoing = false
     lend.student.onLend = false
-    lend.book.isAvailable = true
+    lend.bookReplica.isAvailable = true
 
     await lend.save()
     await lend.student.save()
-    await lend.book.save()
+    await lend.bookReplica.save()
 
     return response.redirect('/lends')
   }
@@ -110,6 +110,8 @@ export default class LendsController {
     const lends = await this.lendsFilter.filter(filterOptions, { loadStudentsClassRooms: true })
 
     const data = lends.map((lend) => {
+      lend.bookReplica.load('book')
+
       //@ts-ignore
       lend = lend.serialize()
 
@@ -117,8 +119,8 @@ export default class LendsController {
         lend.student.name,
         lend.student.classRoom.name,
         lend.student.enrollmentNumber,
-        lend.book.title,
-        lend.book.seducCode,
+        lend.bookReplica.book.title,
+        lend.bookReplica.seducCode,
         lend.createdAt,
         lend.endsAt,
       ]

@@ -21,10 +21,14 @@ export const createLendValidator = vine.compile(
 
       return !!student
     }),
-    bookId: vine.string().unique(async (db, value) => {
-      const book = await db.from('books').where('id', value).andWhere('is_available', true).first()
+    bookReplicaId: vine.string().unique(async (db, value) => {
+      const bookReplica = await db
+        .from('book_replicas')
+        .where('id', value)
+        .andWhere('is_available', true)
+        .first()
 
-      return !!book
+      return !!bookReplica
     }),
   })
 )

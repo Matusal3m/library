@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import Author from './author.js'
-import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import Genre from './genre.js'
 import { randomUUID } from 'node:crypto'
+import BookReplica from './book_replica.js'
 
 export default class Book extends BaseModel {
   static selfAssignPrimaryKey = true
@@ -18,6 +19,9 @@ export default class Book extends BaseModel {
 
   @column()
   declare title: string
+
+  @hasMany(() => BookReplica)
+  declare replicas: HasMany<typeof BookReplica>
 
   @manyToMany(() => Author, {
     pivotTable: 'author_books',
