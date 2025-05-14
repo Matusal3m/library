@@ -62,7 +62,7 @@ export class LendsFilterService {
     }
 
     query
-      .preload('book', (q) => q.select('id', 'title', 'seduc_code'))
+      .preload('bookReplica', (q) => q.select('id', 'seduc_code'))
       .preload('student', (q) => {
         q.select('id', 'name', 'enrollment_number')
 

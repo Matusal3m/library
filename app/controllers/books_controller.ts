@@ -37,8 +37,14 @@ export default class BooksController {
    * Display form to create a new record
    */
   async create({ inertia }: HttpContext) {
-    const authors = (await Author.all()) as unknown as { id: string; name: string }[]
-    const genres = (await Genre.all()) as unknown as { id: string; name: string }[]
+    const authors = (await Author.query().select('id', 'name')) as unknown as {
+      id: string
+      name: string
+    }[]
+    const genres = (await Genre.query().select('id', 'name')) as unknown as {
+      id: string
+      name: string
+    }[]
 
     return inertia.render('books/create', { authors, genres })
   }
@@ -63,9 +69,9 @@ export default class BooksController {
   async show({ params, inertia }: HttpContext) {
     const book = await Book.findOrFail(params.id)
 
-    await book.load('authors')
-    await book.load('genres')
-    await book.load('replicas')
+    await book.load('authors', (q) => q.select('id', 'name'))
+    await book.load('genres', (q) => q.select('id', 'name'))
+    await book.load('replicas', (q) => q.select('id', 'seduc_code', 'is_available', 'book_id'))
 
     await book.loadCount('replicas')
 

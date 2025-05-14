@@ -1,8 +1,6 @@
 import { InferPageProps } from '@adonisjs/inertia/types'
 import BooksController from '../../../app/controllers/books_controller'
 import { Link } from '@inertiajs/react'
-import AvailableIndicator from '~/components/ui/indicators/available-indicator'
-import UnavailableIndicator from '~/components/ui/indicators/unavailable-indicator'
 
 export default function IndexBooks({ books }: InferPageProps<BooksController, 'index'>) {
   return (
