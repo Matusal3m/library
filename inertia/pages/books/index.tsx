@@ -48,13 +48,6 @@ export default function IndexBooks({ books }: InferPageProps<BooksController, 'i
                 ))}
               </span>
             </div>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              {book.isAvailable ? <AvailableIndicator /> : <UnavailableIndicator />}
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                Código da Seduc: {book.seducCode}
-              </span>
-            </div>
           </div>
         </div>
       ))}

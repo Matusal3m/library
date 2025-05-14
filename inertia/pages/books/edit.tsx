@@ -10,8 +10,6 @@ import MultiSelect from '~/components/ui/selects/multi-select'
 export default function EditBookForm({ book }: InferPageProps<BooksController, 'edit'>) {
   const { data, setData, put, processing, errors } = useForm({
     title: book.title,
-    quantity: book.quantity,
-    seducCode: book.seducCode,
     authorsIds: book.authors.map((author) => author.id),
     genresIds: book.authors.map((genre) => genre.id),
   })
@@ -36,23 +34,6 @@ export default function EditBookForm({ book }: InferPageProps<BooksController, '
         value={data.title}
         onChange={(e) => setData('title', e.target.value)}
         error={errors.title}
-      />
-
-      <FloatingInput
-        label="Quantidade"
-        name="quantity"
-        type="number"
-        value={data.quantity}
-        onChange={(e) => setData('quantity', e.target.value as any)}
-        error={errors.quantity}
-      />
-
-      <FloatingInput
-        label="Código SEDUC"
-        name="seducCode"
-        value={data.seducCode}
-        onChange={(e) => setData('seducCode', e.target.value)}
-        error={errors.seducCode}
       />
 
       <MultiSelect

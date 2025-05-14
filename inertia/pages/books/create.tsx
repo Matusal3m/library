@@ -6,7 +6,6 @@ import Button from '~/components/ui/buttons/button'
 import LoadingButton from '~/components/ui/buttons/loading-button'
 import FloatingInput from '~/components/ui/inputs/floating-input'
 import MultiSelect from '~/components/ui/selects/multi-select'
-import BooksLayout from '~/layouts/books-layout'
 
 export default function CreateBookForm({
   authors,
@@ -14,8 +13,6 @@ export default function CreateBookForm({
 }: InferPageProps<BooksController, 'create'>) {
   const { data, setData, post, processing, errors } = useForm({
     title: '',
-    quantity: '',
-    seducCode: '',
     authorsIds: [] as any[],
     genresIds: [] as any[],
   })
@@ -40,23 +37,6 @@ export default function CreateBookForm({
         value={data.title}
         onChange={(e) => setData('title', e.target.value)}
         error={errors.title}
-      />
-
-      <FloatingInput
-        label="Quantidade"
-        name="quantity"
-        type="number"
-        value={data.quantity}
-        onChange={(e) => setData('quantity', e.target.value)}
-        error={errors.quantity}
-      />
-
-      <FloatingInput
-        label="Código SEDUC"
-        name="seducCode"
-        value={data.seducCode}
-        onChange={(e) => setData('seducCode', e.target.value)}
-        error={errors.seducCode}
       />
 
       <MultiSelect

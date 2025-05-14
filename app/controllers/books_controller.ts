@@ -15,9 +15,6 @@ export default class BooksController {
     const booksJson = books.map((book) => book.serialize()) as {
       id: string
       title: string
-      isAvailable: boolean
-      seducCode: string
-      quantity: number
       genres: { id: string; name: string }[]
       authors: { id: string; name: string }[]
     }[]
@@ -62,13 +59,10 @@ export default class BooksController {
       book: book.serialize() as {
         id: string
         title: string
-        seducCode: string
         genres: { id: string; name: string }[]
         authors: { id: string; name: string }[]
-        isAvailable: boolean
         createdAt: string
         updatedAt: string
-        quantity: number
       },
     })
   }
@@ -86,11 +80,8 @@ export default class BooksController {
       book: book.serialize() as {
         id: string
         title: string
-        seducCode: string
         genres: { id: string; name: string }[]
         authors: { id: string; name: string }[]
-        isAvailable: boolean
-        quantity: number
       },
     })
   }
@@ -106,9 +97,4 @@ export default class BooksController {
 
     return response.redirect('/books')
   }
-
-  /**
-   * Delete record
-   */
-  async destroy({ params }: HttpContext) {}
 }

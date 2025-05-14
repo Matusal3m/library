@@ -19,19 +19,6 @@ export default class Book extends BaseModel {
   @column()
   declare title: string
 
-  @column()
-  declare seducCode: string
-
-  @column()
-  declare quantity: number
-
-  @column({
-    serialize(value) {
-      return value === 1
-    },
-  })
-  declare isAvailable: boolean
-
   @manyToMany(() => Author, {
     pivotTable: 'author_books',
   })

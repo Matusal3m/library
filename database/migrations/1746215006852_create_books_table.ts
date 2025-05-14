@@ -8,9 +8,7 @@ export default class extends BaseSchema {
       table.uuid('id').primary()
 
       table.string('title')
-      table.string('seduc_code')
       table.integer('quantity')
-      table.boolean('is_available').defaultTo(true)
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
