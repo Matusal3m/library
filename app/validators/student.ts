@@ -59,4 +59,18 @@ export const createStudentValidator = vine.compile(
  * Validator to validate the payload when updating
  * an existing student.
  */
-export const updateStudentValidator = vine.compile(vine.object({}))
+export const updateStudentValidator = vine.compile(
+  vine.object({
+    name: vine.string(),
+    enrollmentNumber: vine.number().positive().unique({
+      table: 'students',
+      column: 'enrollment_number',
+    }),
+    email: vine.string().unique({
+      table: 'students',
+      column: 'email',
+    }),
+    phoneNumber: vine.string().regex(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/),
+    classRoomId: vine.string(),
+  })
+)

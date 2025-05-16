@@ -9,14 +9,15 @@ import PhoneInput from '~/components/ui/inputs/phone-input'
 import { SingleSelect } from '~/components/ui/selects/single-select'
 
 export default function CreateStudentForm({
+  student,
   classRooms,
-}: InferPageProps<StudentsController, 'create'>) {
+}: InferPageProps<StudentsController, 'edit'>) {
   const { data, setData, post, processing, errors } = useForm({
-    name: '',
-    enrollmentNumber: '',
-    classRoomId: '',
-    email: '',
-    phoneNumber: '',
+    name: student.name,
+    enrollmentNumber: student.enrollmentNumber,
+    classRoomId: student.classRoomId,
+    email: student.email,
+    phoneNumber: student.phoneNumber,
   })
 
   function submit(e: FormEvent) {

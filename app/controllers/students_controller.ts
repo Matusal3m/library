@@ -1,6 +1,6 @@
 import ClassRoom from '#models/class_room'
 import Student from '#models/student'
-import { createStudentValidator } from '#validators/student'
+import { createStudentValidator, updateStudentValidator } from '#validators/student'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class StudentsController {
@@ -53,7 +53,7 @@ export default class StudentsController {
       .where('id', params.id)
       .preload('classRoom')
       .preload('lend', (query) => {
-        query.preload('book').orderBy('created_at', 'desc').first()
+        query.preload('bookReplica').orderBy('created_at', 'desc').first()
       })
       .firstOrFail()
 
@@ -86,12 +86,29 @@ export default class StudentsController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ params, inertia }: HttpContext) {
+    const student = await Student.findOrFail(params.id)
+
+    const classRooms = await ClassRoom.query().select('id', 'name')
+
+    return inertia.render('students/edit', {
+      student: student.serialize(),
+      classRooms: classRooms as { id: string; name: string }[],
+    })
+  }
 
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({ params, response, request }: HttpContext) {
+    // const data = await request.validateUsing(updateStudentValidator)
+
+    const student = await Student.findOrFail(params.id)
+
+    // student.merge(data).save()
+
+    return response.redirect(`/students`)
+  }
 
   /**
    * Delete record
