@@ -3,7 +3,6 @@ import { FormEvent } from 'react'
 import Button from '~/components/ui/buttons/button'
 import LoadingButton from '~/components/ui/buttons/loading-button'
 import FloatingInput from '~/components/ui/inputs/floating-input'
-import AuthorsLayout from '~/layouts/authors-layout'
 
 export default function EditAuthor({ author }: { author: { id: string; name: string } }) {
   const { data, setData, put, processing, errors } = useForm({

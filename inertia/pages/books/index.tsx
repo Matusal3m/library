@@ -20,14 +20,11 @@ export default function IndexBooks({ books }: InferPageProps<BooksController, 'i
             <div>
               <strong>Autoria:</strong>{' '}
               <span className="flex flex-wrap gap-1">
-                {book.authors.map((author) => (
-                  <Link
-                    key={author.id}
-                    href={`/authors/${author.id}`}
-                    className="underline hover:text-blue-600 dark:hover:text-blue-400"
-                  >
+                {book.authors.map((author, i) => (
+                  <div key={author.id}>
                     {author.name}
-                  </Link>
+                    {i === book.authors.length - 1 ? '' : ','}
+                  </div>
                 ))}
               </span>
             </div>
@@ -35,14 +32,11 @@ export default function IndexBooks({ books }: InferPageProps<BooksController, 'i
             <div>
               <strong>Gêneros:</strong>{' '}
               <span className="flex flex-wrap gap-1">
-                {book.genres.map((genre) => (
-                  <Link
-                    key={genre.id}
-                    href={`/genres/${genre.id}`}
-                    className="underline hover:text-blue-600 dark:hover:text-blue-400"
-                  >
+                {book.genres.map((genre, i) => (
+                  <span key={genre.id}>
                     {genre.name}
-                  </Link>
+                    {i === book.genres.length - 1 ? '' : ','}
+                  </span>
                 ))}
               </span>
             </div>
