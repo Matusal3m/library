@@ -1,6 +1,6 @@
 import ClassRoom from '#models/class_room'
 import Student from '#models/student'
-import { createStudentValidator, updateStudentValidator } from '#validators/student'
+import { createStudentValidator } from '#validators/student'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class StudentsController {

@@ -2,8 +2,21 @@ import Book from '#models/book'
 import BookReplica from '#models/book_replica'
 import { createBookReplicaValidator, updateBookReplicaValidator } from '#validators/book_replica'
 import type { HttpContext } from '@adonisjs/core/http'
+import db from '@adonisjs/lucid/services/db'
 
 export default class BookReplicasController {
+  async index({ request, response }: HttpContext) {
+    const query = BookReplica.query()
+
+    if (request.qs().bookId) {
+      query.where('book_id', request.qs().bookId)
+    }
+
+    const bookReplicas = await query.exec()
+
+    return response.send(bookReplicas)
+  }
+
   /**
    * Handle form submission for the create action
    */
@@ -24,8 +37,21 @@ export default class BookReplicasController {
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {
-    // Include students history on show method
+  async show({ params, inertia }: HttpContext) {
+    const studentsHistory = await db
+      .from('lends')
+      .join('students', (q) => {
+        q.on('lends.book_replica_id', '=', params.id)
+      })
+      .select('students.name', 'students.id', 'students.enrollment_number', 'students.class_room')
+      .exec()
+
+    const bookReplica = await BookReplica.findOrFail(params.id)
+
+    return inertia.render('book_replicas/show', {
+      studentsHistory,
+      bookReplica,
+    })
   }
 
   /**

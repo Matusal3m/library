@@ -37,7 +37,7 @@ export default class LendsController {
   /**
    * Display form to create a new record
    */
-  async create({ inertia }: HttpContext) {
+  async create({ inertia, request }: HttpContext) {
     const students = await Student.all()
     const books = await Book.all()
 
@@ -54,6 +54,9 @@ export default class LendsController {
     return inertia.render('lends/create', {
       books: booksJson,
       students: studentsJson,
+      bookReplicas: inertia.optional(() =>
+        BookReplica.query().where('book_id', request.qs().bookId).select('id', 'seduc_code as name')
+      ),
     })
   }
 

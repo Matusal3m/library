@@ -1,7 +1,7 @@
 import LendsController from '#controllers/lends_controller'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import { useForm } from '@inertiajs/react'
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import Button from '~/components/ui/buttons/button'
 import LoadingButton from '~/components/ui/buttons/loading-button'
 import { SingleSelect } from '~/components/ui/selects/single-select'
@@ -10,14 +10,22 @@ export default function CreateLendForm({
   books,
   students,
 }: InferPageProps<LendsController, 'create'>) {
+  const [bookReplicas, setBookReplicas] = useState([])
+
   const { data, setData, post, processing, errors } = useForm({
-    bookId: '',
+    bookReplicaId: '',
     studentId: '',
   })
 
   function submit(e: FormEvent) {
     e.preventDefault()
     post('/lends')
+  }
+
+  async function handleBookChange(bookId: string) {
+    const response = await fetch(`${location.origin}/api/book-replicas?bookId=${bookId}`)
+    const bookReplicas = await response.json()
+    setBookReplicas(bookReplicas)
   }
 
   return (
@@ -34,9 +42,23 @@ export default function CreateLendForm({
         placeholder="Selecione o livro"
         name="book_id"
         options={books}
-        onChange={(vals) => setData('bookId', vals as string)}
-        value={data.bookId}
-        error={errors.bookId}
+        onChange={(vals) => {
+          handleBookChange(vals as string)
+          setData('bookReplicaId', vals as string)
+        }}
+        value={data.bookReplicaId}
+        error={errors.bookReplicaId}
+        search
+      />
+
+      <SingleSelect
+        label="Cód. da Seduc"
+        placeholder="Escolha um dos livros"
+        name="book_replica_id"
+        options={(bookReplicas as any) || []}
+        onChange={(vals) => setData('bookReplicaId', vals as string)}
+        value={data.bookReplicaId}
+        error={errors.bookReplicaId}
         search
       />
 
