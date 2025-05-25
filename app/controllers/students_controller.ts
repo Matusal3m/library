@@ -1,6 +1,6 @@
 import ClassRoom from '#models/class_room'
 import Student from '#models/student'
-import { createStudentValidator } from '#validators/student'
+import { createStudentValidator, updateStudentValidator } from '#validators/student'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class StudentsController {
@@ -101,17 +101,15 @@ export default class StudentsController {
      * Handle form submission for the edit action
      */
     async update({ params, response, request }: HttpContext) {
-        // const data = await request.validateUsing(updateStudentValidator)
+        // The validator is not working and the logger either. I dont know the reason eand find out why will take longer then the code below.
+        const data = await request.validateUsing(updateStudentValidator, {
+            meta: { userId: params.id },
+        })
 
         const student = await Student.findOrFail(params.id)
 
-        // student.merge(data).save()
+        student.merge(data).save()
 
         return response.redirect(`/students`)
     }
-
-    /**
-     * Delete record
-     */
-    async destroy({ params }: HttpContext) {}
 }

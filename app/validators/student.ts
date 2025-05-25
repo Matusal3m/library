@@ -25,6 +25,8 @@ vine.messagesProvider = new SimpleMessagesProvider(
 
         'name.required': 'O nome do aluno é obrigatório',
         'name.string': 'O nome deve ser um texto válido',
+
+        'database.unique': 'Este {{ field }} já está cadastrado no sistema',
     },
     {
         name: 'Nome do aluno',
@@ -50,7 +52,13 @@ export const createStudentValidator = vine.compile(
             table: 'students',
             column: 'email',
         }),
-        phoneNumber: vine.string().regex(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/),
+        phoneNumber: vine
+            .string()
+            .regex(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/)
+            .unique({
+                table: 'students',
+                column: 'phone_number',
+            }),
         classRoomId: vine.string(),
     })
 )
@@ -62,15 +70,43 @@ export const createStudentValidator = vine.compile(
 export const updateStudentValidator = vine.compile(
     vine.object({
         name: vine.string(),
-        enrollmentNumber: vine.number().positive().unique({
-            table: 'students',
-            column: 'enrollment_number',
+
+        enrollmentNumber: vine
+            .number()
+            .positive()
+            .unique(async (db, value, field) => {
+                const exists = await db
+                    .from('students')
+                    .where('enrollment_number', value)
+                    .andWhereNot('id', field.meta.userId)
+                    .first()
+
+                return !exists
+            }),
+
+        email: vine.string().unique(async (db, value, field) => {
+            const exists = await db
+                .from('students')
+                .where('email', value)
+                .andWhereNot('id', field.meta.userId)
+                .first()
+
+            return !exists
         }),
-        email: vine.string().unique({
-            table: 'students',
-            column: 'email',
-        }),
-        phoneNumber: vine.string().regex(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/),
+
+        phoneNumber: vine
+            .string()
+            .regex(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/)
+            .unique(async (db, value, field) => {
+                const exists = await db
+                    .from('students')
+                    .where('phone_number', value)
+                    .andWhereNot('id', field.meta.userId)
+                    .first()
+
+                return !exists
+            }),
+
         classRoomId: vine.string(),
     })
 )

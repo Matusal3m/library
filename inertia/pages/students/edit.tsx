@@ -8,11 +8,11 @@ import FloatingInput from '~/components/ui/inputs/floating-input'
 import PhoneInput from '~/components/ui/inputs/phone-input'
 import { SingleSelect } from '~/components/ui/selects/single-select'
 
-export default function CreateStudentForm({
+export default function EditStudentForm({
     student,
     classRooms,
 }: InferPageProps<StudentsController, 'edit'>) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, put, processing, errors } = useForm({
         name: student.name,
         enrollmentNumber: student.enrollmentNumber,
         classRoomId: student.classRoomId,
@@ -22,7 +22,7 @@ export default function CreateStudentForm({
 
     function submit(e: FormEvent) {
         e.preventDefault()
-        post('/students')
+        put(`/students/${student.id}`)
     }
 
     return (
