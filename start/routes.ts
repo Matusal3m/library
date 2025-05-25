@@ -29,9 +29,9 @@ router.post('lends/:id/finish', [LendsController, 'finish'])
 router.get('lends/document', [LendsController, 'document'])
 
 router
-  .group(() => {
-    router.get('book-replicas', [LendsController, 'index'])
-  })
-  .prefix('api')
+    .group(() => {
+        router.get('book-replicas', [LendsController, 'index'])
+    })
+    .prefix('/api')
 
 router.on('/').renderInertia('home')

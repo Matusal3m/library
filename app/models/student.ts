@@ -6,58 +6,58 @@ import { randomUUID } from 'node:crypto'
 import Lend from './lend.js'
 
 export default class Student extends BaseModel {
-  static selfAssignPrimaryKey = true
+    static selfAssignPrimaryKey = true
 
-  @column({ isPrimary: true })
-  declare id: string
+    @column({ isPrimary: true })
+    declare id: string
 
-  @beforeCreate()
-  static assignUuid(student: Student) {
-    student.id = randomUUID()
-  }
+    @beforeCreate()
+    static assignUuid(student: Student) {
+        student.id = randomUUID()
+    }
 
-  @column()
-  declare name: string
+    @column()
+    declare name: string
 
-  @column()
-  declare phoneNumber: string
+    @column()
+    declare phoneNumber: string
 
-  @column()
-  declare email: string
+    @column()
+    declare email: string
 
-  @column()
-  declare enrollmentNumber: number
+    @column()
+    declare enrollmentNumber: number
 
-  @column({
-    serialize(value) {
-      return value === 1
-    },
-  })
-  declare onLend: boolean
+    @column({
+        serialize(value) {
+            return value === 1
+        },
+    })
+    declare onLend: boolean
 
-  @column()
-  declare classRoomId: string
+    @column()
+    declare classRoomId: string
 
-  @hasOne(() => Lend)
-  declare lend: HasOne<typeof Lend>
+    @hasOne(() => Lend)
+    declare lend: HasOne<typeof Lend>
 
-  @belongsTo(() => ClassRoom)
-  declare classRoom: BelongsTo<typeof ClassRoom>
+    @belongsTo(() => ClassRoom)
+    declare classRoom: BelongsTo<typeof ClassRoom>
 
-  @column.dateTime({
-    autoCreate: true,
-    serialize(value) {
-      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
-    },
-  })
-  declare createdAt: DateTime
+    @column.dateTime({
+        autoCreate: true,
+        serialize(value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+        },
+    })
+    declare createdAt: DateTime
 
-  @column.dateTime({
-    autoCreate: true,
-    autoUpdate: true,
-    serialize(value) {
-      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
-    },
-  })
-  declare updatedAt: DateTime
+    @column.dateTime({
+        autoCreate: true,
+        autoUpdate: true,
+        serialize(value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT)
+        },
+    })
+    declare updatedAt: DateTime
 }

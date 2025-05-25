@@ -6,9 +6,9 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine'
  */
 
 export const createAuthorValidator = vine.compile(
-  vine.object({
-    name: vine.string().unique({ column: 'name', table: 'authors', caseInsensitive: true }),
-  })
+    vine.object({
+        name: vine.string().unique({ column: 'name', table: 'authors', caseInsensitive: true }),
+    })
 )
 
 /**
@@ -16,7 +16,7 @@ export const createAuthorValidator = vine.compile(
  * an existing author.
  */
 export const updateAuthorValidator = vine.compile(
-  vine.object({
-    name: vine.string().unique({ column: 'name', table: 'authors' }),
-  })
+    vine.object({
+        name: vine.string().unique({ column: 'name', table: 'authors' }),
+    })
 )

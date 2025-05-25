@@ -5,10 +5,10 @@ import vine from '@vinejs/vine'
  * a new book replica.
  */
 export const createBookReplicaValidator = vine.compile(
-  vine.object({
-    bookId: vine.string(),
-    seducCode: vine.string(),
-  })
+    vine.object({
+        bookId: vine.string(),
+        seducCode: vine.string(),
+    })
 )
 
 /**
@@ -16,7 +16,7 @@ export const createBookReplicaValidator = vine.compile(
  * an existing book replica.
  */
 export const updateBookReplicaValidator = vine.compile(
-  vine.object({
-    seducCode: vine.string(),
-  })
+    vine.object({
+        seducCode: vine.string(),
+    })
 )

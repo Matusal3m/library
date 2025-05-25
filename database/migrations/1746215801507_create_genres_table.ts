@@ -1,20 +1,20 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'genres'
+    protected tableName = 'genres'
 
-  async up() {
-    this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id').primary()
+    async up() {
+        this.schema.createTable(this.tableName, (table) => {
+            table.uuid('id').primary()
 
-      table.string('name').unique()
+            table.string('name').unique()
 
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
-    })
-  }
+            table.timestamp('created_at')
+            table.timestamp('updated_at')
+        })
+    }
 
-  async down() {
-    this.schema.dropTable(this.tableName)
-  }
+    async down() {
+        this.schema.dropTable(this.tableName)
+    }
 }

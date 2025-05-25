@@ -13,131 +13,133 @@ import BookReplica from '#models/book_replica'
 
 @inject()
 export default class LendsController {
-  constructor(
-    private lendsFilter: LendsFilterService,
-    private documentGenerator: DocumentGeneratorService
-  ) {}
+    constructor(
+        private lendsFilter: LendsFilterService,
+        private documentGenerator: DocumentGeneratorService
+    ) {}
 
-  /**
-   * Display a list of resource
-   */
-  async index({ inertia, request }: HttpContext) {
-    const filterOptions = await request.validateUsing(lendFilterValidator)
+    /**
+     * Display a list of resource
+     */
+    async index({ inertia, request }: HttpContext) {
+        const filterOptions = await request.validateUsing(lendFilterValidator)
 
-    const lends = await this.lendsFilter.filter(filterOptions)
+        const lends = await this.lendsFilter.filter(filterOptions)
 
-    const classRooms = await ClassRoom.all()
+        const classRooms = await ClassRoom.all()
 
-    return inertia.render('lends/index', {
-      lends: lends.map((lend) => lend.serialize()),
-      classRooms: classRooms.map((c) => c.serialize()) as { id: string; name: string }[],
-    })
-  }
+        return inertia.render('lends/index', {
+            lends: lends.map((lend) => lend.serialize()),
+            classRooms: classRooms.map((c) => c.serialize()) as { id: string; name: string }[],
+        })
+    }
 
-  /**
-   * Display form to create a new record
-   */
-  async create({ inertia, request }: HttpContext) {
-    const students = await Student.all()
-    const books = await Book.all()
+    /**
+     * Display form to create a new record
+     */
+    async create({ inertia, request }: HttpContext) {
+        const students = await Student.all()
+        const books = await Book.all()
 
-    const booksJson = books.map((book) => ({
-      id: book.id,
-      name: book.title,
-    }))
+        const booksJson = books.map((book) => ({
+            id: book.id,
+            name: book.title,
+        }))
 
-    const studentsJson = students.map((student) => ({
-      id: student.id,
-      name: student.name,
-    }))
+        const studentsJson = students.map((student) => ({
+            id: student.id,
+            name: student.name,
+        }))
 
-    return inertia.render('lends/create', {
-      books: booksJson,
-      students: studentsJson,
-      bookReplicas: inertia.optional(() =>
-        BookReplica.query().where('book_id', request.qs().bookId).select('id', 'seduc_code as name')
-      ),
-    })
-  }
+        return inertia.render('lends/create', {
+            books: booksJson,
+            students: studentsJson,
+            bookReplicas: inertia.optional(() =>
+                BookReplica.query()
+                    .where('book_id', request.qs().bookId)
+                    .select('id', 'seduc_code as name')
+            ),
+        })
+    }
 
-  /**
-   * Handle form submission for the create action
-   */
-  async store({ request, response }: HttpContext) {
-    const { bookReplicaId, studentId } = await createLendValidator.validate(request.all())
+    /**
+     * Handle form submission for the create action
+     */
+    async store({ request, response }: HttpContext) {
+        const { bookReplicaId, studentId } = await createLendValidator.validate(request.all())
 
-    const bookReplica = await BookReplica.findOrFail(bookReplicaId)
-    const student = await Student.findOrFail(studentId)
+        const bookReplica = await BookReplica.findOrFail(bookReplicaId)
+        const student = await Student.findOrFail(studentId)
 
-    await Lend.create({ bookReplicaId, studentId })
+        await Lend.create({ bookReplicaId, studentId })
 
-    bookReplica.merge({ isAvailable: false }).save()
-    student.merge({ onLend: true }).save()
+        bookReplica.merge({ isAvailable: false }).save()
+        student.merge({ onLend: true }).save()
 
-    return response.redirect('/lends')
-  }
+        return response.redirect('/lends')
+    }
 
-  async extend({ params, response }: HttpContext) {
-    const lend = await Lend.findOrFail(params.id)
+    async extend({ params, response }: HttpContext) {
+        const lend = await Lend.findOrFail(params.id)
 
-    lend.extendedAt = DateTime.now()
-    lend.wasExtended = true
-    lend.endsAt = lend.extendedAt.plus({ days: 14 })
+        lend.extendedAt = DateTime.now()
+        lend.wasExtended = true
+        lend.endsAt = lend.extendedAt.plus({ days: 14 })
 
-    await lend.save()
+        await lend.save()
 
-    return response.redirect('/lends')
-  }
+        return response.redirect('/lends')
+    }
 
-  async finish({ params, response }: HttpContext) {
-    const lend = await Lend.findOrFail(params.id)
+    async finish({ params, response }: HttpContext) {
+        const lend = await Lend.findOrFail(params.id)
 
-    await lend.load('student')
-    await lend.load('bookReplica')
+        await lend.load('student')
+        await lend.load('bookReplica')
 
-    lend.returnedAt = DateTime.now()
-    lend.itsOngoing = false
-    lend.student.onLend = false
-    lend.bookReplica.isAvailable = true
+        lend.returnedAt = DateTime.now()
+        lend.itsOngoing = false
+        lend.student.onLend = false
+        lend.bookReplica.isAvailable = true
 
-    await lend.save()
-    await lend.student.save()
-    await lend.bookReplica.save()
+        await lend.save()
+        await lend.student.save()
+        await lend.bookReplica.save()
 
-    return response.redirect('/lends')
-  }
+        return response.redirect('/lends')
+    }
 
-  async document({ request, response }: HttpContext) {
-    const filterOptions = await request.validateUsing(lendFilterValidator)
+    async document({ request, response }: HttpContext) {
+        const filterOptions = await request.validateUsing(lendFilterValidator)
 
-    const lends = await this.lendsFilter.filter(filterOptions, { loadStudentsClassRooms: true })
+        const lends = await this.lendsFilter.filter(filterOptions, { loadStudentsClassRooms: true })
 
-    const data = lends.map((lend) => {
-      lend.bookReplica.load('book')
+        const data = lends.map((lend) => {
+            lend.bookReplica.load('book')
 
-      //@ts-ignore
-      lend = lend.serialize()
+            //@ts-ignore
+            lend = lend.serialize()
 
-      return [
-        lend.student.name,
-        lend.student.classRoom.name,
-        lend.student.enrollmentNumber,
-        lend.bookReplica.book.title,
-        lend.bookReplica.seducCode,
-        lend.createdAt,
-        lend.endsAt,
-      ]
-    })
+            return [
+                lend.student.name,
+                lend.student.classRoom.name,
+                lend.student.enrollmentNumber,
+                lend.bookReplica.book.title,
+                lend.bookReplica.seducCode,
+                lend.createdAt,
+                lend.endsAt,
+            ]
+        })
 
-    const { path } = await this.documentGenerator.generate(
-      ['Aluno', 'Turma', 'N. de Matrícula', 'Livro', 'Cód. da Seduc', 'Início', 'Término'],
-      data
-    )
+        const { path } = await this.documentGenerator.generate(
+            ['Aluno', 'Turma', 'N. de Matrícula', 'Livro', 'Cód. da Seduc', 'Início', 'Término'],
+            data
+        )
 
-    response.onFinish(() => {
-      rmSync(path)
-    })
+        response.onFinish(() => {
+            rmSync(path)
+        })
 
-    return response.attachment(path, 'relatorio-de-emprestimos.pdf')
-  }
+        return response.attachment(path, 'relatorio-de-emprestimos.pdf')
+    }
 }

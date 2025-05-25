@@ -9,13 +9,13 @@ import inertiaResolve from './inertia-resolve'
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
 createInertiaApp({
-  progress: { color: '#5468FF' },
+    progress: { color: '#5468FF' },
 
-  title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title} - ${appName}`,
 
-  resolve: inertiaResolve,
+    resolve: inertiaResolve,
 
-  setup({ el, App, props }) {
-    hydrateRoot(el, <App {...props} />)
-  },
+    setup({ el, App, props }) {
+        hydrateRoot(el, <App {...props} />)
+    },
 })
