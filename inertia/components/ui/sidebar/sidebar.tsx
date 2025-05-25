@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react'
 import { MoreHorizontal } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type SidebarItemProps = {
     label: string
@@ -15,12 +15,14 @@ export default function Sidebar({
     items: SidebarItemProps[]
     extraItems: SidebarItemProps[]
 }) {
-    const [currentPath, setCurrentPath] = useState('')
     const [showMore, setShowMore] = useState(false)
+    const [currentPath, setCurrentPath] = useState('')
 
-    const handleClick = (path: string) => {
-        setCurrentPath(path)
-    }
+    useEffect(() => {
+        setCurrentPath(window.location.pathname)
+
+        return () => setCurrentPath('')
+    })
 
     return (
         <aside className="w-[20%] h-screen hidden sm:block fixed top-0 left-0 z-40">
@@ -31,11 +33,10 @@ export default function Sidebar({
                             <Link
                                 href={item.href}
                                 className={`
-                  flex items-center p-2 text-gray-900 rounded-lg 
+                  flex items-center p-2 text-gray-900 rounded-lg
                   dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group
                   ${item.href === currentPath ? 'bg-gray-100 dark:bg-gray-700' : ''}
                 `}
-                                onClick={() => handleClick(item.href)}
                             >
                                 {item.icon ? <item.icon /> : <span className="w-5 h-5"></span>}
                                 <span className="ms-3">{item.label}</span>
@@ -59,7 +60,7 @@ export default function Sidebar({
                                         <Link
                                             href={item.href}
                                             className={`
-                        flex items-center p-2 text-gray-900 rounded-lg 
+                        flex items-center p-2 text-gray-900 rounded-lg
                         dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group
                         ${item.href === currentPath ? 'bg-gray-100 dark:bg-gray-700' : ''}
                       `}
