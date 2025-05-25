@@ -10,7 +10,7 @@ export default function BooksLayout({ children }: { children: React.ReactNode })
         },
         {
             href: '/books/create',
-            label: 'Adicionar novo livro',
+            label: 'Adicionar livro',
         },
     ]
 

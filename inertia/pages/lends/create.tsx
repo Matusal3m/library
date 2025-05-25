@@ -37,7 +37,7 @@ export default function CreateLendForm({
             className="max-w-lg mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow"
         >
             <h4 className="text-xl font-semibold text-gray-800 dark:text-white mb-6">
-                Adicionar novo autor
+                Adicionar autor
             </h4>
 
             <SingleSelect

@@ -10,7 +10,7 @@ export default function AuthorsLayout({ children }: { children: React.ReactNode 
         },
         {
             href: '/authors/create',
-            label: 'Criar autor',
+            label: 'Adicionar autor',
         },
     ]
 
