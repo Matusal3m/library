@@ -21,17 +21,33 @@ export default class BooksController {
     /**
      * Display a list of resource
      */
-    async index({ inertia }: HttpContext) {
-        const books = await Book.query().preload('authors').preload('genres')
+    async index({ inertia, request }: HttpContext) {
+        const search = request.input('search', '')
+        const where = request.input('where', 'title')
 
-        const booksJson = books.map((book) => book.serialize()) as {
-            id: string
-            title: string
-            genres: { id: string; name: string }[]
-            authors: { id: string; name: string }[]
-        }[]
+        const booksQuery = Book.query().preload('authors').preload('genres')
 
-        return inertia.render('books/index', { books: booksJson })
+        if (search !== '') {
+            booksQuery.where((query) => {
+                if (where === 'title') {
+                    query.whereLike('title', `%${search}%`)
+                }
+
+                if (where === 'author') {
+                    query.orWhereHas('authors', (authorQuery) => {
+                        authorQuery.whereLike('name', `%${search}%`)
+                    })
+                }
+            })
+        }
+
+        const books = await booksQuery.orderBy('title')
+
+        return inertia.render('books/index', {
+            books,
+            search: search as string,
+            where: where as string,
+        })
     }
 
     /**
