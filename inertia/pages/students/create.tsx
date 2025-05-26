@@ -70,7 +70,7 @@ export default function CreateStudentForm({
                 label="Turma"
                 placeholder="Selecione uma turma"
                 name="class_rooms_ids"
-                options={classRooms}
+                options={classRooms.toSorted((a, b) => (a.name > b.name ? 1 : -1))}
                 value={data.classRoomId}
                 onChange={(vals) => setData('classRoomId', vals as string)}
                 error={errors.classRoomId}

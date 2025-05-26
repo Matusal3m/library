@@ -1,11 +1,19 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import Book from './book.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { randomUUID } from 'node:crypto'
 
 export default class BookReplica extends BaseModel {
+    static selfAssignPrimaryKey = true
+
+    @beforeCreate()
+    static assignUuid(bookReplica: BookReplica) {
+        bookReplica.id = randomUUID()
+    }
+
     @column({ isPrimary: true })
-    declare id: number
+    declare id: string
 
     @column()
     declare bookId: string

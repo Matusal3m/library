@@ -1,5 +1,4 @@
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
-// import { LendMessagesProvider } from './custom-messages/lend.js'
 
 vine.messagesProvider = new SimpleMessagesProvider({
     'bookId.database.unique': 'Este livro já está emprestado a outro aluno.',

@@ -11,7 +11,7 @@ export default function StudentsLayout({ children }: { children: React.ReactNode
         {
             href: '/students/create',
             label: 'Adicionar aluno',
-        }
+        },
     ]
 
     return (

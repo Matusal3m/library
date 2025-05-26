@@ -19,7 +19,7 @@ export default function Sidebar({
     const [currentPath, setCurrentPath] = useState('')
 
     useEffect(() => {
-        setCurrentPath( '/' + window.location.pathname.split('/')[1])
+        setCurrentPath('/' + window.location.pathname.split('/')[1])
 
         return () => setCurrentPath('')
     })

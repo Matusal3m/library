@@ -6,18 +6,33 @@ import AvailableIndicator from '~/components/ui/indicators/available-indicator'
 import UnavailableIndicator from '~/components/ui/indicators/unavailable-indicator'
 import { useState } from 'react'
 import FloatingInput from '~/components/ui/inputs/floating-input'
+import LendModal from '~/components/ui/dropdowns/lend-dropdown'
 
-export default function ShowBook({ book }: InferPageProps<BooksController, 'show'>) {
-    const [open, setOpen] = useState(false)
+export default function ShowBook({ book, students }: InferPageProps<BooksController, 'show'>) {
+    const [openNewReplica, setOpenNewReplica] = useState(false)
+    const [selectedReplica, setSelectedReplica] = useState<(typeof book.replicas)[0] | null>(null)
+    const { data, setData, post } = useForm({ seducCode: '' })
 
-    const { data, setData, post } = useForm({
-        seducCode: '',
-    })
-
-    const handleOpen = () => {
+    const handleOpenNewReplica = () => {
         setData('seducCode', '')
-        setOpen(!open)
+        setOpenNewReplica((prev) => !prev)
     }
+
+    const submitNewReplica = (e: React.FormEvent) => {
+        e.preventDefault()
+        post(`/books/${book.id}/replicas`, {
+            onSuccess: () => setOpenNewReplica(false),
+        })
+    }
+
+    const handleLendClick = (replica: (typeof book.replicas)[0]) => {
+        if (!replica.isAvailable) return
+
+        router.reload({ only: ['students'] })
+        setSelectedReplica(replica)
+    }
+
+    const closeLendDropdown = () => setSelectedReplica(null)
 
     const handleDeleteReplica = (replicaId: string) => {
         if (confirm('Tem certeza que deseja excluir esta réplica?')) {
@@ -25,20 +40,59 @@ export default function ShowBook({ book }: InferPageProps<BooksController, 'show
         }
     }
 
-    const submit = () => {
-        post(`/books/${book.id}/replicas`)
-    }
-
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-8 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-            <header className="flex gap-4 space-y-2">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{book.title}</h1>
-                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <BookOpenIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    <span>
-                        Quantidade de réplicas: <strong>{book.quantity}</strong>
-                    </span>
+            <header className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                        {book.title}
+                    </h1>
+                    <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <BookOpenIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <span>
+                            Quantidade de réplicas: <strong>{book.quantity}</strong>
+                        </span>
+                    </div>
                 </div>
+                <button
+                    onClick={handleOpenNewReplica}
+                    className="flex items-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+                >
+                    <PlusCircle className="w-4 h-4" /> Nova Réplica
+                </button>
+
+                {openNewReplica && (
+                    <div className="relative">
+                        <div className="absolute top-full right-0 mt-2 w-64 z-10">
+                            <form
+                                onSubmit={submitNewReplica}
+                                className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700"
+                            >
+                                <div className="flex justify-end">
+                                    <button
+                                        onClick={() => setOpenNewReplica(false)}
+                                        className="text-gray-500"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                                <FloatingInput
+                                    label="Código da Seduc"
+                                    name="seduc_code"
+                                    onChange={(e) => setData('seducCode', e.target.value)}
+                                    value={data.seducCode}
+                                    className="w-full mb-3"
+                                />
+                                <button
+                                    type="submit"
+                                    className="w-full py-2 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-sm"
+                                >
+                                    Adicionar Réplica
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </header>
 
             <section className="space-y-4">
@@ -58,6 +112,7 @@ export default function ShowBook({ book }: InferPageProps<BooksController, 'show
                         ))}
                     </div>
                 </div>
+
                 <div>
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                         Gêneros
@@ -75,71 +130,17 @@ export default function ShowBook({ book }: InferPageProps<BooksController, 'show
                     </div>
                 </div>
 
-                <div>
-                    <div className="flex justify-between items-center mb-2 relative">
-                        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                            Réplicas
-                        </h2>
-
-                        <div className="relative">
-                            <button
-                                onClick={handleOpen}
-                                className="flex items-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
-                            >
-                                <PlusCircle className="w-4 h-4" />
-                                <span>Nova Réplica</span>
-                            </button>
-
-                            {open && (
-                                <div className="absolute top-full right-0 mt-2 w-64 z-10">
-                                    <form
-                                        onSubmit={submit}
-                                        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700"
-                                    >
-                                        <div className="relative">
-                                            <div
-                                                onClick={() => setOpen(false)}
-                                                className="cursor-pointer p-2"
-                                            >
-                                                <div className="absolute right-3 w-4 h-4 bg-white dark:bg-gray-800 border-t border-l border-gray-200 dark:border-gray-700 rotate-45" />
-                                            </div>
-
-                                            <FloatingInput
-                                                label="Código da Seduc"
-                                                name="seduc_code"
-                                                onChange={(e) =>
-                                                    setData('seducCode', e.target.value)
-                                                }
-                                                value={data.seducCode}
-                                                className="w-full mb-3"
-                                            />
-
-                                            <button
-                                                type="submit"
-                                                className="w-full py-2 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md 
-                  transition-colors text-sm"
-                                            >
-                                                Adicionar Réplica
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
                 <div className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
-                    <table className="w-full">
+                    <table className="w-full overflow-y-auto">
                         <thead className="bg-gray-50 dark:bg-gray-800">
                             <tr>
-                                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Cod. da Seduc
                                 </th>
-                                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Disponibilidade
                                 </th>
-                                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Ações
                                 </th>
                             </tr>
@@ -148,7 +149,7 @@ export default function ShowBook({ book }: InferPageProps<BooksController, 'show
                             {book.replicas.map((replica) => (
                                 <tr
                                     key={replica.id}
-                                    className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    className="relative hover:bg-gray-50 dark:hover:bg-gray-700"
                                 >
                                     <td className="px-4 py-3 text-blue-700 dark:text-blue-300 font-mono">
                                         {replica.seducCode}
@@ -160,7 +161,24 @@ export default function ShowBook({ book }: InferPageProps<BooksController, 'show
                                             <UnavailableIndicator message="Indisponível" />
                                         )}
                                     </td>
-                                    <td className="px-4 py-3 text-center">
+                                    <td className="px-4 py-3 flex justify-center items-center gap-4 ">
+                                        <div className="">
+                                            <button
+                                                onClick={() => handleLendClick(replica)}
+                                                disabled={!replica.isAvailable}
+                                                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 shadow-sm
+                          ${
+                              replica.isAvailable
+                                  ? 'text-green-700 bg-green-100 hover:bg-green-200 dark:text-green-300 dark:bg-green-950 dark:hover:bg-green-800'
+                                  : 'text-gray-400 bg-gray-100 dark:text-gray-500 dark:bg-gray-800 cursor-not-allowed'
+                          }`}
+                                            >
+                                                {replica.isAvailable
+                                                    ? 'Emprestar'
+                                                    : 'Já emprestado'}
+                                            </button>
+                                        </div>
+
                                         <button
                                             onClick={() => handleDeleteReplica(replica.id)}
                                             className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
@@ -173,6 +191,15 @@ export default function ShowBook({ book }: InferPageProps<BooksController, 'show
                             ))}
                         </tbody>
                     </table>
+
+                    {selectedReplica && (
+                        <LendModal
+                            isOpen={true}
+                            onClose={closeLendDropdown}
+                            students={students || []}
+                            replica={selectedReplica}
+                        />
+                    )}
                 </div>
             </section>
         </div>

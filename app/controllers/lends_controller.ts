@@ -1,4 +1,3 @@
-import Book from '#models/book'
 import Lend from '#models/lend'
 import Student from '#models/student'
 import { createLendValidator, lendFilterValidator } from '#validators/lend'
@@ -10,6 +9,7 @@ import { LendsFilterService } from '#services/lends_filter_service'
 import { DocumentGeneratorService } from '#services/document_generator_service'
 import { rmSync } from 'node:fs'
 import BookReplica from '#models/book_replica'
+import logger from '@adonisjs/core/services/logger'
 
 @inject()
 export default class LendsController {
@@ -35,38 +35,11 @@ export default class LendsController {
     }
 
     /**
-     * Display form to create a new record
-     */
-    async create({ inertia, request }: HttpContext) {
-        const students = await Student.all()
-        const books = await Book.all()
-
-        const booksJson = books.map((book) => ({
-            id: book.id,
-            name: book.title,
-        }))
-
-        const studentsJson = students.map((student) => ({
-            id: student.id,
-            name: student.name,
-        }))
-
-        return inertia.render('lends/create', {
-            books: booksJson,
-            students: studentsJson,
-            bookReplicas: inertia.optional(() =>
-                BookReplica.query()
-                    .where('book_id', request.qs().bookId)
-                    .select('id', 'seduc_code as name')
-            ),
-        })
-    }
-
-    /**
      * Handle form submission for the create action
      */
     async store({ request, response }: HttpContext) {
-        const { bookReplicaId, studentId } = await createLendValidator.validate(request.all())
+        // validates if the student and the book are available
+        const { bookReplicaId, studentId } = await request.validateUsing(createLendValidator)
 
         const bookReplica = await BookReplica.findOrFail(bookReplicaId)
         const student = await Student.findOrFail(studentId)

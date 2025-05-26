@@ -193,7 +193,7 @@ function ItemListWithSearch({
                     ))
                 ) : (
                     <li className="px-3 py-2 text-gray-500 dark:text-gray-400 italic">
-                        Nenhuma opção encontrada
+                        Nenhum item encontrado
                     </li>
                 )}
             </ul>

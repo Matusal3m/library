@@ -1,6 +1,7 @@
 import Author from '#models/author'
 import Book from '#models/book'
 import Genre from '#models/genre'
+import Student from '#models/student'
 
 import type { HttpContext } from '@adonisjs/core/http'
 import { createBookValidator, updateBookValidator } from '#validators/book'
@@ -82,6 +83,10 @@ export default class BooksController {
                 ...bookJson,
                 quantity: book.$extras.replicas_count,
             } as SerializedBookWithReplicas,
+            students: inertia.optional(
+                async () =>
+                    (await Student.query().select('id', 'name')) as { id: string; name: string }[]
+            ),
         })
     }
 

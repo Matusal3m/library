@@ -242,13 +242,13 @@ export default function LendsIndex({
                         key={lend.id}
                         className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-900 dark:border-gray-700"
                     >
-                        <Link href={`/books/${lend.book.id}`} className="mb-3">
+                        <Link href={`.bookReplica./${lend.bookReplica.id}`} className="mb-3">
                             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2 hover:underline">
                                 <BookIcon className="w-4 h-4" />
-                                {lend.book.title}
+                                {lend.bookReplica.book.title}
                             </h2>
                             <span className="text-xs text-gray-500 dark:text-gray-400">
-                                Código da Seduc: {lend.book.seducCode}
+                                Código da Seduc: {lend.bookReplica.seducCode}
                             </span>
                         </Link>
 

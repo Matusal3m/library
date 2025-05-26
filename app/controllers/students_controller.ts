@@ -101,7 +101,6 @@ export default class StudentsController {
      * Handle form submission for the edit action
      */
     async update({ params, response, request }: HttpContext) {
-        // The validator is not working and the logger either. I dont know the reason eand find out why will take longer then the code below.
         const data = await request.validateUsing(updateStudentValidator, {
             meta: { userId: params.id },
         })
