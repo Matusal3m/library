@@ -35,6 +35,7 @@ export function SingleSelect({
     const selectOption = (id: string | number) => {
         if (value !== id) {
             onChange(id)
+            setIsOpen(false)
         }
     }
 

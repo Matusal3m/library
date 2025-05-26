@@ -33,15 +33,15 @@ export class LendsFilterService {
             (classRoomsIds && classRoomsIds.length > 0)
 
         if (hasFilters) {
-            if (wasExtended && wasExtended !== 'any') {
+            if (wasExtended !== undefined && wasExtended !== 'any') {
                 query.where('was_extended', wasExtended)
             }
 
-            if (itsOngoing && itsOngoing !== 'any') {
+            if (itsOngoing !== undefined && itsOngoing !== 'any') {
                 query.where('its_ongoing', itsOngoing)
             }
 
-            if (itsLate && itsLate !== 'any') {
+            if (itsLate !== undefined && itsLate !== 'any') {
                 const operator = itsLate ? '<' : '>'
                 query.where((subquery) => {
                     subquery

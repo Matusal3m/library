@@ -33,6 +33,7 @@ export default function MultiSelect({
     const selectOption = (id: string | number) => {
         if (!value.includes(id)) {
             onChange([...value, id])
+            setIsOpen(false)
         }
     }
 

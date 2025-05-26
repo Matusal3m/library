@@ -14,7 +14,6 @@ import {
     ChevronUp,
     PlusIcon,
 } from 'lucide-react'
-import Checkbox from '~/components/ui/inputs/checkbox'
 import { SingleSelect } from '~/components/ui/selects/single-select'
 import Radio from '~/components/ui/inputs/radio'
 import Button from '~/components/ui/buttons/button'
@@ -27,9 +26,9 @@ export default function LendsIndex({
 }: InferPageProps<LendsController, 'index'>) {
     const { data, setData } = useForm({
         where: {
-            itsOngoing: 'any' as boolean | 'any',
-            wasExtended: 'any' as boolean | 'any',
-            itsLate: 'any' as boolean | 'any',
+            itsOngoing: 'any',
+            wasExtended: 'any',
+            itsLate: 'any',
             classRoomsIds: [] as string[],
         },
         orderBy: 'created_at',
@@ -61,11 +60,23 @@ export default function LendsIndex({
 
     const partialReloadPage = () => router.reload({ only: ['lends'] })
 
+    const extensionOptions = [
+        { id: 'any', name: 'Qualquer' },
+        { id: 'true', name: 'Prorrogados' },
+        { id: 'false', name: 'Não prorrogados' },
+    ]
+
+    const lateOptions = [
+        { id: 'any', name: 'Qualquer' },
+        { id: 'true', name: 'Atrasados' },
+        { id: 'false', name: 'Não atrasados' },
+    ]
+
     const optionsToOrderBy = [
-        { id: 'created_at', name: 'Criação' },
-        { id: 'ends_at', name: 'Data de devolução' },
+        { id: 'created_at', name: 'Data de aluguel' },
+        { id: 'ends_at', name: 'Data de devolução prevista' },
         { id: 'extended_at', name: 'Data de extensão' },
-        { id: 'returned_at', name: 'Data de devolução' },
+        { id: 'returned_at', name: 'Data em que foi entreque' },
         { id: 'students.name', name: 'Nome do aluno' },
     ]
 
@@ -105,137 +116,123 @@ export default function LendsIndex({
             {showFilters && (
                 <form onSubmit={submit} className="mb-8">
                     <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-sm rounded-xl p-6">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                             <FilterIcon className="w-5 h-5" />
                             Filtros
                         </h2>
-                        <div className="grid grid-cols-2 gap-2">
-                            <div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div className="flex flex-col justify-start">
-                                        <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                                            Incluir
-                                        </h5>
 
-                                        <Checkbox
-                                            label="Prorrogados"
-                                            checked={
-                                                data.where.wasExtended === 'any'
-                                                    ? false
-                                                    : data.where.wasExtended
-                                            }
-                                            onChange={(value) =>
-                                                setData('where.wasExtended', value)
-                                            }
-                                        />
-                                        <Checkbox
-                                            label="Atrasados"
-                                            checked={
-                                                data.where.itsLate === 'any'
-                                                    ? false
-                                                    : data.where.itsLate
-                                            }
-                                            onChange={(value) => setData('where.itsLate', value)}
-                                        />
-                                    </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="space-y-4">
+                                <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                    Empréstimo
+                                </h5>
+                                <Radio
+                                    label="Em andamento"
+                                    name="itsOngoing"
+                                    value={true}
+                                    data={data.where.itsOngoing}
+                                    onChange={(value) => setData('where.itsOngoing', value)}
+                                />
+                                <Radio
+                                    label="Devolvido"
+                                    name="itsOngoing"
+                                    value={false}
+                                    data={data.where.itsOngoing}
+                                    onChange={(value) => setData('where.itsOngoing', value)}
+                                />
+                                <Radio
+                                    label="Sem preferência"
+                                    name="itsOngoing"
+                                    value="any"
+                                    data={data.where.itsOngoing}
+                                    onChange={(value) => setData('where.itsOngoing', value)}
+                                />
+                            </div>
 
-                                    <div className="flex flex-col justify-start">
-                                        <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                                            Apenas
-                                        </h5>
-                                        <Radio
-                                            label="Devolvido"
-                                            name="itsOngoing"
-                                            value={false}
-                                            data={data.where.itsOngoing}
-                                            onChange={(value) => setData('where.itsOngoing', value)}
-                                        />
-                                        <Radio
-                                            label="Em andamento"
-                                            name="itsOngoing"
-                                            value={true}
-                                            data={data.where.itsOngoing}
-                                            onChange={(value) => setData('where.itsOngoing', value)}
-                                        />
-                                        <Radio
-                                            label="Sem preferência"
-                                            name="itsOngoing"
-                                            value={'any'}
-                                            data={data.where.itsOngoing}
-                                            onChange={(value) => setData('where.itsOngoing', value)}
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col col-span-2">
-                                        <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                                            Turmas
-                                        </h5>
-                                        <MultiSelect
-                                            name="classRooms"
-                                            options={classRooms}
-                                            value={data.where.classRoomsIds}
-                                            onChange={(vals) =>
-                                                setData('where.classRoomsIds', vals)
-                                            }
-                                        />
-                                    </div>
+                            <div className="space-y-6">
+                                <div>
+                                    <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                                        Prorrogação
+                                    </h5>
+                                    <SingleSelect
+                                        options={extensionOptions}
+                                        value={data.where.wasExtended}
+                                        onChange={(v) => setData('where.wasExtended', v as string)}
+                                        name="was_extended"
+                                    />
+                                </div>
+                                <div>
+                                    <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                                        Status de Atraso
+                                    </h5>
+                                    <SingleSelect
+                                        options={lateOptions}
+                                        value={data.where.itsLate}
+                                        onChange={(v) => setData('where.itsLate', v as string)}
+                                        name="its_late"
+                                    />
                                 </div>
                             </div>
 
-                            <div>
-                                <SingleSelect
-                                    options={optionsToOrderBy}
-                                    placeholder="Selecionar forma de ordenação"
-                                    name="order_by_fields"
-                                    onChange={(vals) => setData('orderBy', vals as string)}
-                                    value={data.orderBy}
-                                />
-
-                                <div className="flex flex-col">
-                                    <h5 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
-                                        Ordem:
+                            <div className="space-y-6">
+                                <div>
+                                    <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                                        Turmas
                                     </h5>
-                                    <div className="flex gap-4">
+                                    <MultiSelect
+                                        name="classRooms"
+                                        options={classRooms}
+                                        value={data.where.classRoomsIds}
+                                        onChange={(vals) => setData('where.classRoomsIds', vals)}
+                                    />
+                                </div>
+                                <div>
+                                    <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                                        Ordenação
+                                    </h5>
+                                    <SingleSelect
+                                        options={optionsToOrderBy}
+                                        placeholder="Campo"
+                                        name="order_by_fields"
+                                        value={data.orderBy}
+                                        onChange={(v) => setData('orderBy', v as string)}
+                                    />
+                                    <div className="mt-2 flex items-center gap-4">
                                         <Radio
                                             label="Crescente"
                                             name="direction"
-                                            onChange={(value) =>
-                                                setData('direction', value as string)
-                                            }
-                                            data={data.direction}
                                             value="asc"
+                                            data={data.direction}
+                                            onChange={(v) => setData('direction', v as string)}
                                         />
                                         <Radio
                                             label="Decrescente"
                                             name="direction"
-                                            onChange={(value) =>
-                                                setData('direction', value as string)
-                                            }
-                                            data={data.direction}
                                             value="desc"
-                                        />
-                                    </div>
-
-                                    <div className="pt-4 flex justify-end items-center">
-                                        <Button
-                                            type="submit"
-                                            label="Filtrar"
-                                            className="w-full sm:w-auto"
-                                        />
-                                        <Button
-                                            type="button"
-                                            onClick={() => resetFilters()}
-                                            label="Limpar filtros"
-                                            className="w-full sm:w-auto"
+                                            data={data.direction}
+                                            onChange={(v) => setData('direction', v as string)}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div className="mt-6 flex justify-end gap-3">
+                            <Button
+                                type="button"
+                                onClick={resetFilters}
+                                label="Limpar filtros"
+                                className="sm:w-auto"
+                            />
+                            <Button
+                                type="submit"
+                                label="Filtrar"
+                                className="sm:w-auto bg-green-600"
+                            />
+                        </div>
                     </div>
                 </form>
             )}
-
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {lends.map((lend) => (
                     <div
