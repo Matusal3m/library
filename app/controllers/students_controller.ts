@@ -7,21 +7,28 @@ export default class StudentsController {
     /**
      * Display a list of resource
      */
-    async index({ inertia }: HttpContext) {
-        const students = await Student.query().preload('classRoom', (query) => {
-            query.select('id', 'name')
-        })
+    async index({ inertia, request }: HttpContext) {
+        const search = request.input('search', '').trim()
+        const where = request.input('where', 'name')
+
+        const studentsQuery = Student.query()
+
+        if (search !== '') {
+            if (where === 'name') {
+                studentsQuery.whereILike('name', `%${search}%`)
+            }
+
+            if (where === 'email') {
+                studentsQuery.whereILike('email', `%${search}%`)
+            }
+        }
+
+        const students = await studentsQuery.orderBy('name')
 
         return inertia.render('students/index', {
-            students: students as {
-                id: string
-                name: string
-                enrollmentNumber: number
-                phoneNumber: string
-                email: string
-                onLend: boolean
-                classRoom: { id: string; name: string }
-            }[],
+            students,
+            search,
+            where,
         })
     }
 
