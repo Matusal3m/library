@@ -1,7 +1,7 @@
 import Lend from '#models/lend'
 
 type FilterLendsOptions = {
-    direction?: 'asc' | 'desc' | undefined
+    direction?: string,
     orderBy?: 'created_at' | 'ends_at' | 'extended_at' | 'returned_at' | 'students.name' | undefined
     where?:
         | {
@@ -10,7 +10,6 @@ type FilterLendsOptions = {
               itsLate: string | boolean
               classRoomsIds?: string[] | undefined
           }
-        | undefined
     search?: string
     searchBy?: 'student' | 'book'
 }
@@ -67,12 +66,14 @@ export class LendsFilterService {
             const term = `%${search.trim()}%`
             if (searchBy === 'student') {
                 query.whereHas('student', (sq) => {
-                    sq.whereILike('name', term)
+                    sq.whereLike('name', term)
                 })
-            } else if (searchBy === 'book') {
+            }
+
+            if (searchBy === 'book') {
                 query.whereHas('bookReplica', (br) => {
                     br.whereHas('book', (bq) => {
-                        bq.whereILike('title', term)
+                        bq.whereLike('title', term)
                     })
                 })
             }
@@ -104,6 +105,7 @@ export class LendsFilterService {
             }
         }
 
+        // @ts-ignore
         query.orderBy(orderBy || 'created_at', direction || 'desc')
 
         return await query.exec()

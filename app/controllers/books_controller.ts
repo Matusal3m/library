@@ -101,7 +101,10 @@ export default class BooksController {
             } as SerializedBookWithReplicas,
             students: inertia.optional(
                 async () =>
-                    (await Student.query().select('id', 'name')) as { id: string; name: string }[]
+                    (await Student.query().select('id', 'name', 'enrollment_number')).map(s => ({
+                        id: s.id,
+                        name:`${s.name} (${s.enrollmentNumber})`
+                    }))  as { id: string; name: string}[]
             ),
         })
     }

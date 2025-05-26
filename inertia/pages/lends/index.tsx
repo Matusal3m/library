@@ -84,6 +84,7 @@ export default function LendsIndex({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault()
+        console.log(data)
         get('/lends', {
             preserveState: true,
             replace: true,
@@ -118,8 +119,7 @@ export default function LendsIndex({
                 </button>
             </div>
 
-            {showFilters && (
-                <form onSubmit={submit} className="mb-8">
+            <form onSubmit={submit} className="mb-2">
                     <div className="flex gap-2">
                         <input
                             type="text"
@@ -142,7 +142,11 @@ export default function LendsIndex({
                         >
                             Buscar
                         </button>
-                    </div>{' '}
+                    </div>
+            </form>
+
+            {showFilters && (
+                <form onSubmit={submit} className="mb-8">
                     <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-sm rounded-xl p-6">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                             <FilterIcon className="w-5 h-5" />

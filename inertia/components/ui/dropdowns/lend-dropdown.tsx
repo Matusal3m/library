@@ -9,7 +9,7 @@ type LendModalProps = {
 }
 
 export default function LendModal({ isOpen, onClose, students, replica }: LendModalProps) {
-    const { data, setData, post, reset, errors } = useForm({
+    const { data, setData, post, reset } = useForm({
         studentId: '',
         bookReplicaId: replica.id,
     })

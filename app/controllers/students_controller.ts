@@ -15,11 +15,11 @@ export default class StudentsController {
 
         if (search !== '') {
             if (where === 'name') {
-                studentsQuery.whereILike('name', `%${search}%`)
+                studentsQuery.whereLike('name', `%${search}%`)
             }
 
             if (where === 'email') {
-                studentsQuery.whereILike('email', `%${search}%`)
+                studentsQuery.whereLike('email', `%${search}%`)
             }
         }
 

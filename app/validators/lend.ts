@@ -47,7 +47,7 @@ export const lendFilterValidator = vine.compile(
             .enum(['created_at', 'ends_at', 'extended_at', 'returned_at', 'students.name'] as const)
             .optional(),
 
-        direction: vine.enum(['asc', 'desc'] as const).optional(),
+        direction: vine.string().optional(),
 
         search: vine.string().optional(),
         searchBy: vine.enum(['student', 'book'] as const).optional(),
