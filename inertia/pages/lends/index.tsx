@@ -23,18 +23,20 @@ import MultiSelect from '~/components/ui/selects/multi-select'
 export default function LendsIndex({
     lends,
     classRooms,
+    filters,
 }: InferPageProps<LendsController, 'index'>) {
-    const { data, setData } = useForm({
+    const { data, setData, get } = useForm({
         where: {
-            itsOngoing: 'any',
-            wasExtended: 'any',
-            itsLate: 'any',
-            classRoomsIds: [] as string[],
+            itsOngoing: filters?.where?.itsOngoing || 'any',
+            wasExtended: filters?.where?.wasExtended || 'any',
+            itsLate: filters?.where?.itsLate || 'any',
+            classRoomsIds: filters?.where?.classRoomsIds || ([] as string[]),
         },
-        orderBy: 'created_at',
-        direction: 'asc',
+        searchBy: filters?.searchBy || 'name',
+        search: filters?.search || '',
+        orderBy: filters?.orderBy || 'created_at',
+        direction: filters?.direction || 'asc',
     })
-
     const [showFilters, setShowFilters] = useState(false)
 
     const resetFilters = () => {
@@ -80,9 +82,12 @@ export default function LendsIndex({
         { id: 'students.name', name: 'Nome do aluno' },
     ]
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const submit = (e: React.FormEvent) => {
         e.preventDefault()
-        router.reload({ only: ['lends'], data, replace: true })
+        get('/lends', {
+            preserveState: true,
+            replace: true,
+        })
     }
 
     return (
@@ -115,6 +120,29 @@ export default function LendsIndex({
 
             {showFilters && (
                 <form onSubmit={submit} className="mb-8">
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            placeholder="Buscar..."
+                            value={data.search}
+                            onChange={(e) => setData('search', e.target.value)}
+                            className="flex-1 p-2 border border-gray-300 rounded-lg"
+                        />
+                        <select
+                            value={data.searchBy}
+                            onChange={(e) => setData('searchBy', e.target.value)}
+                            className="p-2 border border-gray-300 rounded-lg"
+                        >
+                            <option value="student">Estudante</option>
+                            <option value="book">Livro</option>
+                        </select>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        >
+                            Buscar
+                        </button>
+                    </div>{' '}
                     <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-sm rounded-xl p-6">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                             <FilterIcon className="w-5 h-5" />
@@ -156,7 +184,7 @@ export default function LendsIndex({
                                     </h5>
                                     <SingleSelect
                                         options={extensionOptions}
-                                        value={data.where.wasExtended}
+                                        value={data.where.wasExtended as string}
                                         onChange={(v) => setData('where.wasExtended', v as string)}
                                         name="was_extended"
                                     />
@@ -167,7 +195,7 @@ export default function LendsIndex({
                                     </h5>
                                     <SingleSelect
                                         options={lateOptions}
-                                        value={data.where.itsLate}
+                                        value={data.where.itsLate as string}
                                         onChange={(v) => setData('where.itsLate', v as string)}
                                         name="its_late"
                                     />
@@ -181,7 +209,7 @@ export default function LendsIndex({
                                     </h5>
                                     <MultiSelect
                                         name="classRooms"
-                                        options={classRooms}
+                                        options={classRooms as any}
                                         value={data.where.classRoomsIds}
                                         onChange={(vals) => setData('where.classRoomsIds', vals)}
                                     />
@@ -195,7 +223,7 @@ export default function LendsIndex({
                                         placeholder="Campo"
                                         name="order_by_fields"
                                         value={data.orderBy}
-                                        onChange={(v) => setData('orderBy', v as string)}
+                                        onChange={(v) => setData('orderBy', v as any)}
                                     />
                                     <div className="mt-2 flex items-center gap-4">
                                         <Radio
@@ -203,14 +231,14 @@ export default function LendsIndex({
                                             name="direction"
                                             value="asc"
                                             data={data.direction}
-                                            onChange={(v) => setData('direction', v as string)}
+                                            onChange={(v) => setData('direction', v as any)}
                                         />
                                         <Radio
                                             label="Decrescente"
                                             name="direction"
                                             value="desc"
                                             data={data.direction}
-                                            onChange={(v) => setData('direction', v as string)}
+                                            onChange={(v) => setData('direction', v as any)}
                                         />
                                     </div>
                                 </div>

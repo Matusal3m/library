@@ -9,7 +9,6 @@ import { LendsFilterService } from '#services/lends_filter_service'
 import { DocumentGeneratorService } from '#services/document_generator_service'
 import { rmSync } from 'node:fs'
 import BookReplica from '#models/book_replica'
-import logger from '@adonisjs/core/services/logger'
 
 @inject()
 export default class LendsController {
@@ -21,16 +20,19 @@ export default class LendsController {
     /**
      * Display a list of resource
      */
-    async index({ inertia, request }: HttpContext) {
+    public async index({ inertia, request }: HttpContext) {
         const filterOptions = await request.validateUsing(lendFilterValidator)
 
-        const lends = await this.lendsFilter.filter(filterOptions)
+        const lends = await this.lendsFilter.filter(filterOptions, {
+            loadStudentsClassRooms: true,
+        })
 
         const classRooms = await ClassRoom.all()
 
         return inertia.render('lends/index', {
-            lends: lends.map((lend) => lend.serialize()),
-            classRooms: classRooms.map((c) => c.serialize()) as { id: string; name: string }[],
+            lends: lends.map((l) => l.serialize()),
+            classRooms: classRooms.map((c) => c.serialize()),
+            filters: filterOptions,
         })
     }
 

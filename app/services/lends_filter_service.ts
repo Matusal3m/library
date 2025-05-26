@@ -11,6 +11,8 @@ type FilterLendsOptions = {
               classRoomsIds?: string[] | undefined
           }
         | undefined
+    search?: string
+    searchBy?: 'student' | 'book'
 }
 
 type LendColumnsOptions = {
@@ -19,7 +21,7 @@ type LendColumnsOptions = {
 
 export class LendsFilterService {
     async filter(
-        { direction, orderBy, where }: FilterLendsOptions,
+        { direction, orderBy, where, search, searchBy }: FilterLendsOptions,
         { loadStudentsClassRooms }: LendColumnsOptions = {}
     ) {
         const query = Lend.query()
@@ -61,6 +63,20 @@ export class LendsFilterService {
             }
         }
 
+        if (search && search.trim()) {
+            const term = `%${search.trim()}%`
+            if (searchBy === 'student') {
+                query.whereHas('student', (sq) => {
+                    sq.whereILike('name', term)
+                })
+            } else if (searchBy === 'book') {
+                query.whereHas('bookReplica', (br) => {
+                    br.whereHas('book', (bq) => {
+                        bq.whereILike('title', term)
+                    })
+                })
+            }
+        }
         query
             .preload('bookReplica', (q) =>
                 q

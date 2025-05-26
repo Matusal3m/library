@@ -42,9 +42,14 @@ export const lendFilterValidator = vine.compile(
                 classRoomsIds: vine.array(vine.string()).optional(),
             })
             .optional(),
+
         orderBy: vine
-            .enum(['created_at', 'ends_at', 'extended_at', 'returned_at', 'students.name'])
+            .enum(['created_at', 'ends_at', 'extended_at', 'returned_at', 'students.name'] as const)
             .optional(),
-        direction: vine.enum(['asc', 'desc']).optional(),
+
+        direction: vine.enum(['asc', 'desc'] as const).optional(),
+
+        search: vine.string().optional(),
+        searchBy: vine.enum(['student', 'book'] as const).optional(),
     })
 )
