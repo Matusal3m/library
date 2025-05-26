@@ -25,14 +25,14 @@ export default function LendsIndex({
     classRooms,
     filters,
 }: InferPageProps<LendsController, 'index'>) {
-    const { data, setData, get } = useForm({
+    const { data, setData, get, errors } = useForm({
         where: {
             itsOngoing: filters?.where?.itsOngoing || 'any',
             wasExtended: filters?.where?.wasExtended || 'any',
             itsLate: filters?.where?.itsLate || 'any',
             classRoomsIds: filters?.where?.classRoomsIds || ([] as string[]),
         },
-        searchBy: filters?.searchBy || 'name',
+        searchBy: filters?.searchBy || 'student',
         search: filters?.search || '',
         orderBy: filters?.orderBy || 'created_at',
         direction: filters?.direction || 'asc',
@@ -120,29 +120,29 @@ export default function LendsIndex({
             </div>
 
             <form onSubmit={submit} className="mb-2">
-                    <div className="flex gap-2">
-                        <input
-                            type="text"
-                            placeholder="Buscar..."
-                            value={data.search}
-                            onChange={(e) => setData('search', e.target.value)}
-                            className="flex-1 p-2 border border-gray-300 rounded-lg"
-                        />
-                        <select
-                            value={data.searchBy}
-                            onChange={(e) => setData('searchBy', e.target.value)}
-                            className="p-2 border border-gray-300 rounded-lg"
-                        >
-                            <option value="student">Estudante</option>
-                            <option value="book">Livro</option>
-                        </select>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                        >
-                            Buscar
-                        </button>
-                    </div>
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        value={data.search}
+                        onChange={(e) => setData('search', e.target.value)}
+                        className="flex-1 p-2 border border-gray-300 rounded-lg"
+                    />
+                    <select
+                        value={data.searchBy}
+                        onChange={(e) => setData('searchBy', e.target.value as 'student' | 'book')}
+                        className="p-2 border border-gray-300 rounded-lg"
+                    >
+                        <option value="student">Estudante</option>
+                        <option value="book">Livro</option>
+                    </select>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                        Buscar
+                    </button>
+                </div>
             </form>
 
             {showFilters && (

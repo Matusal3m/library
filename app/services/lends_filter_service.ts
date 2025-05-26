@@ -1,15 +1,14 @@
 import Lend from '#models/lend'
 
 type FilterLendsOptions = {
-    direction?: string,
+    direction?: string
     orderBy?: 'created_at' | 'ends_at' | 'extended_at' | 'returned_at' | 'students.name' | undefined
-    where?:
-        | {
-              wasExtended: string | boolean
-              itsOngoing: string | boolean
-              itsLate: string | boolean
-              classRoomsIds?: string[] | undefined
-          }
+    where?: {
+        wasExtended: string | boolean
+        itsOngoing: string | boolean
+        itsLate: string | boolean
+        classRoomsIds?: string[] | undefined
+    }
     search?: string
     searchBy?: 'student' | 'book'
 }

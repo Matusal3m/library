@@ -21,7 +21,7 @@ export default class LendsController {
      * Display a list of resource
      */
     public async index({ inertia, request }: HttpContext) {
-        const filterOptions = request.all()
+        const filterOptions = await request.validateUsing(lendFilterValidator)
 
         const lends = await this.lendsFilter.filter(filterOptions, {
             loadStudentsClassRooms: true,
