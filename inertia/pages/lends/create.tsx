@@ -24,10 +24,8 @@ export default function CreateLendForm({
     }
 
     async function handleBookChange(bookId: string) {
-        console.log({ origin: location.origin })
         const response = await fetch(`${location.origin}/api/book-replicas?bookId=${bookId}`)
         const bookReplicas = await response.json()
-        console.log(bookReplicas)
         setBookReplicas(bookReplicas)
     }
 

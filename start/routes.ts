@@ -8,30 +8,27 @@
 */
 
 import router from '@adonisjs/core/services/router'
-import { group } from 'console'
 const BooksController = () => import('#controllers/books_controller')
 const AuthorsController = () => import('#controllers/authors_controller')
 const ClassRoomsController = () => import('#controllers/class_rooms_controller')
 const GenresController = () => import('#controllers/genres_controller')
 const StudentsController = () => import('#controllers/students_controller')
 const LendsController = () => import('#controllers/lends_controller')
+const BookReplicasController = () => import('#controllers/book_replicas_controller')
 
 router.resource('authors', AuthorsController)
 router.resource('books', BooksController)
 router.resource('class_rooms', ClassRoomsController)
 router.resource('genres', GenresController)
 router.resource('students', StudentsController)
-router.resource('lends', LendsController).except(['edit', 'update', 'destroy', 'show'])
-router.resource('book-replicas', LendsController).except(['edit', 'update', 'destroy', 'index'])
 
+router.get('lends', [LendsController, 'index'])
+router.post('lends', [LendsController, 'store'])
 router.post('lends/:id/extend', [LendsController, 'extend'])
 router.post('lends/:id/finish', [LendsController, 'finish'])
-router.get('lends/document', [LendsController, 'document'])
 
-router
-    .group(() => {
-        router.get('book-replicas', [LendsController, 'index'])
-    })
-    .prefix('/api')
+router.get('book-replicas/:id', [BookReplicasController, 'show'])
+
+router.get('lends/document', [LendsController, 'document'])
 
 router.on('/').renderInertia('home')

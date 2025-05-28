@@ -44,21 +44,29 @@ export default class BookReplicasController {
         const studentsHistory = await db
             .from('lends')
             .join('students', (q) => {
-                q.on('lends.book_replica_id', '=', params.id)
+                q.onIn('lends.book_replica_id', params.id)
+            })
+            .join('class_rooms', (q) => {
+                q.on('students.class_room_id', 'class_rooms.id')
             })
             .select(
                 'students.name',
                 'students.id',
-                'students.enrollment_number',
-                'students.class_room'
+                'students.enrollment_number as enrollmentNumber',
+                'class_rooms.name as classRoom',
+                'lends.created_at as loanAt',
+                'lends.returned_at as returnedAt'
             )
             .exec()
 
         const bookReplica = await BookReplica.findOrFail(params.id)
 
+        const book = await Book.findOrFail(bookReplica.bookId)
+
         return inertia.render('book_replicas/show', {
             studentsHistory,
             bookReplica,
+            book,
         })
     }
 

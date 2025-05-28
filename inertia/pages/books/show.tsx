@@ -54,45 +54,47 @@ export default function ShowBook({ book, students }: InferPageProps<BooksControl
                         </span>
                     </div>
                 </div>
-                <button
-                    onClick={handleOpenNewReplica}
-                    className="flex items-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
-                >
-                    <PlusCircle className="w-4 h-4" /> Nova Réplica
-                </button>
+                <div className="relative">
+                    <button
+                        onClick={handleOpenNewReplica}
+                        className="flex items-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+                    >
+                        <PlusCircle className="w-4 h-4" /> Nova Réplica
+                    </button>
 
-                {openNewReplica && (
-                    <div className="relative">
-                        <div className="absolute top-full right-0 mt-2 w-64 z-10">
-                            <form
-                                onSubmit={submitNewReplica}
-                                className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700"
-                            >
-                                <div className="flex justify-end">
-                                    <button
-                                        onClick={() => setOpenNewReplica(false)}
-                                        className="text-gray-500"
-                                    >
-                                        ✕
-                                    </button>
-                                </div>
-                                <FloatingInput
-                                    label="Código da Seduc"
-                                    name="seduc_code"
-                                    onChange={(e) => setData('seducCode', e.target.value)}
-                                    value={data.seducCode}
-                                    className="w-full mb-3"
-                                />
-                                <button
-                                    type="submit"
-                                    className="w-full py-2 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-sm"
+                    {openNewReplica && (
+                        <div className="absolute">
+                            <div className="rig-0 mt-2 w-64 z-10">
+                                <form
+                                    onSubmit={submitNewReplica}
+                                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700"
                                 >
-                                    Adicionar Réplica
-                                </button>
-                            </form>
+                                    <div className="flex justify-end">
+                                        <button
+                                            onClick={() => setOpenNewReplica(false)}
+                                            className="text-gray-500"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                    <FloatingInput
+                                        label="Código da Seduc"
+                                        name="seduc_code"
+                                        onChange={(e) => setData('seducCode', e.target.value)}
+                                        value={data.seducCode}
+                                        className="w-full mb-3"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="w-full py-2 px-3 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-sm"
+                                    >
+                                        Adicionar Réplica
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </header>
 
             <section className="space-y-4">
@@ -151,8 +153,10 @@ export default function ShowBook({ book, students }: InferPageProps<BooksControl
                                     key={replica.id}
                                     className="relative hover:bg-gray-50 dark:hover:bg-gray-700"
                                 >
-                                    <td className="px-4 py-3 text-blue-700 dark:text-blue-300 font-mono">
-                                        {replica.seducCode}
+                                    <td className="px-4 py-3 text-blue-700 dark:text-blue-300 font-mono hover:underline">
+                                        <Link href={`/book-replicas/${replica.id}`}>
+                                            {replica.seducCode}
+                                        </Link>
                                     </td>
                                     <td className="px-4 py-3 text-center">
                                         {replica.isAvailable ? (

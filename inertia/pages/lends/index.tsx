@@ -25,7 +25,7 @@ export default function LendsIndex({
     classRooms,
     filters,
 }: InferPageProps<LendsController, 'index'>) {
-    const { data, setData, get, errors } = useForm({
+    const { data, setData, get } = useForm({
         where: {
             itsOngoing: filters?.where?.itsOngoing || 'any',
             wasExtended: filters?.where?.wasExtended || 'any',
@@ -271,7 +271,7 @@ export default function LendsIndex({
                         key={lend.id}
                         className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-900 dark:border-gray-700"
                     >
-                        <Link href={`.bookReplica./${lend.bookReplica.id}`} className="mb-3">
+                        <Link href={`book-replicas/${lend.bookReplica.id}`} className="mb-3">
                             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2 hover:underline">
                                 <BookIcon className="w-4 h-4" />
                                 {lend.bookReplica.book.title}
