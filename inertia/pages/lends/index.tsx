@@ -84,7 +84,6 @@ export default function LendsIndex({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault()
-        console.log(data)
         get('/lends', {
             preserveState: true,
             replace: true,

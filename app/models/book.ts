@@ -8,6 +8,7 @@ import BookReplica from './book_replica.js'
 
 export default class Book extends BaseModel {
     static selfAssignPrimaryKey = true
+    serializeExtras = true
 
     @column({ isPrimary: true })
     declare id: string

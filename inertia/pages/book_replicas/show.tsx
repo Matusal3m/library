@@ -8,11 +8,6 @@ export default function BookReplicaPage({
     studentsHistory,
     book,
 }: InferPageProps<BookReplicasController, 'show'>) {
-    console.log({
-        bookReplica,
-        studentsHistory,
-        book,
-    })
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-8 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
             <header className="flex items-center gap-4">

@@ -6,6 +6,7 @@ import { randomUUID } from 'node:crypto'
 
 export default class Author extends BaseModel {
     static selfAssignPrimaryKey = true
+    serializeExtras = true
 
     @column({ isPrimary: true })
     declare id: string

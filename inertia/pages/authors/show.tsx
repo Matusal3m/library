@@ -16,7 +16,7 @@ export default function ShowAuthor(props: InferPageProps<AuthorsController, 'sho
                     Livros de sua autoria
                 </h3>
                 {props.author.books && props.author.books.length > 0 ? (
-                    <AuthorBookList books={props.author.books} />
+                    <AuthorBookList books={props.author.books as any} />
                 ) : (
                     <AuthorWithoutBooksAlert />
                 )}

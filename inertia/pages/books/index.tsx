@@ -59,15 +59,19 @@ export default function IndexBooks({
                             </h5>
                         </Link>
 
-                        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300 underline ">
                             <div>
                                 <strong>Autoria:</strong>{' '}
                                 <span className="flex flex-wrap gap-1">
                                     {book.authors.map((author, i) => (
-                                        <div key={author.id}>
+                                        <Link
+                                            href={`/authors/${author.id}`}
+                                            className="hover:font-semibold"
+                                            key={author.id}
+                                        >
                                             {author.name}
                                             {i === book.authors.length - 1 ? '' : ','}
-                                        </div>
+                                        </Link>
                                     ))}
                                 </span>
                             </div>

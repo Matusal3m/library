@@ -1,6 +1,8 @@
 import Author from '#models/author'
+import Book from '#models/book'
 import { createAuthorValidator, updateAuthorValidator } from '#validators/author'
 import type { HttpContext } from '@adonisjs/core/http'
+import logger from '@adonisjs/core/services/logger'
 
 export default class AuthorsController {
     /**
@@ -42,8 +44,12 @@ export default class AuthorsController {
      * Show individual record
      */
     async show({ params, inertia }: HttpContext) {
-        const author = await Author.findByOrFail({ id: params.id })
-        await author.load('books')
+        const author = await Author.query()
+            .where('id', params.id)
+            .preload('books', (bq) => {
+                bq.withCount('replicas', (cq) => cq.as('quantity'))
+            })
+            .firstOrFail()
 
         return inertia.render('authors/show', {
             author: author.serialize(),

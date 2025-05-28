@@ -44,7 +44,6 @@ export default function CreateLendForm({
                 name="book_id"
                 options={books}
                 onChange={(vals) => {
-                    console.log(vals)
                     handleBookChange(vals as string)
                     setBookId(vals as string)
                 }}

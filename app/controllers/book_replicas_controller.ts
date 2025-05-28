@@ -9,8 +9,6 @@ export default class BookReplicasController {
     async index({ request, response }: HttpContext) {
         const query = BookReplica.query()
 
-        logger.info(request.qs())
-
         if (request.qs().bookId) {
             query.where('book_id', request.qs().bookId)
         }
