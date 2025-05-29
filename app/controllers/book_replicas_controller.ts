@@ -3,7 +3,6 @@ import BookReplica from '#models/book_replica'
 import { createBookReplicaValidator, updateBookReplicaValidator } from '#validators/book_replica'
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
-import logger from '@adonisjs/core/services/logger'
 
 export default class BookReplicasController {
     async index({ request, response }: HttpContext) {
@@ -79,5 +78,15 @@ export default class BookReplicasController {
         await bookReplica.merge({ seducCode }).save()
 
         return response.redirect(`/books/${bookReplica.bookId}`)
+    }
+
+    async delete({ params, response }: HttpContext) {
+        const bookReplica = await BookReplica.findOrFail(params.id)
+
+        const bookId = bookReplica.bookId
+
+        await bookReplica.delete()
+
+        return response.redirect(`/books/${bookId}`)
     }
 }

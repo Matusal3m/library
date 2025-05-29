@@ -1,6 +1,6 @@
 import Genre from '#models/genre'
+import { createGenreValidator, updateGenreValidator } from '#validators/genre'
 import type { HttpContext } from '@adonisjs/core/http'
-import { dd } from '@adonisjs/core/services/dumper'
 export default class GenresController {
     /**
      * Display a list of resource
@@ -27,25 +27,55 @@ export default class GenresController {
     /**
      * Handle form submission for the create action
      */
-    async store({ request }: HttpContext) {}
+    async store({ request, response }: HttpContext) {
+        const data = await request.validateUsing(createGenreValidator)
+
+        await Genre.create(data)
+
+        return response.redirect('/genres')
+    }
 
     /**
      * Show individual record
      */
-    async show({ params }: HttpContext) {}
+    async show({ params, inertia }: HttpContext) {
+        const genre = await Genre.findOrFail(params.id)
+
+        await genre.load('books', (q) => q.preload('authors').preload('genres'))
+
+        return inertia.render('genres/show', { genre })
+    }
 
     /**
      * Edit individual record
      */
-    async edit({ params }: HttpContext) {}
+    async edit({ params, inertia }: HttpContext) {
+        const genre = await Genre.findOrFail(params.id)
+
+        return inertia.render('genres/edit', { genre })
+    }
 
     /**
      * Handle form submission for the edit action
      */
-    async update({ params, request }: HttpContext) {}
+    async update({ params, request, response }: HttpContext) {
+        const data = await request.validateUsing(updateGenreValidator)
+
+        const genre = await Genre.findOrFail(params.id)
+
+        await genre.merge(data).save()
+
+        return response.redirect('/genres')
+    }
 
     /**
      * Delete record
      */
-    async destroy({ params }: HttpContext) {}
+    async destroy({ params, response }: HttpContext) {
+        const genre = await Genre.findOrFail(params.id)
+
+        await genre.delete()
+
+        return response.redirect('/genres')
+    }
 }

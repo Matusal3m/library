@@ -18,8 +18,8 @@ const BookReplicasController = () => import('#controllers/book_replicas_controll
 
 router.resource('authors', AuthorsController)
 router.resource('books', BooksController)
-router.resource('class_rooms', ClassRoomsController)
-router.resource('genres', GenresController)
+router.resource('class_rooms', ClassRoomsController).only(['index', 'show'])
+router.resource('genres', GenresController).only(['index', 'store', 'show', 'create'])
 router.resource('students', StudentsController)
 
 router.get('lends', [LendsController, 'index'])
@@ -28,6 +28,8 @@ router.post('lends/:id/extend', [LendsController, 'extend'])
 router.post('lends/:id/finish', [LendsController, 'finish'])
 
 router.get('book-replicas/:id', [BookReplicasController, 'show'])
+router.post('book-replicas', [BookReplicasController, 'store'])
+router.delete('book-replicas/:id', [BookReplicasController, 'delete'])
 
 router.get('lends/document', [LendsController, 'document'])
 

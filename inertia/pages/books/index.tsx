@@ -78,14 +78,18 @@ export default function IndexBooks({
 
                             <div>
                                 <strong>Gêneros:</strong>{' '}
-                                <span className="flex flex-wrap gap-1">
+                                <Link className="flex flex-wrap gap-1">
                                     {book.genres.map((genre, i) => (
-                                        <span key={genre.id}>
+                                        <Link
+                                            href={`/genres/${genre.id}`}
+                                            className="hover:font-semibold"
+                                            key={genre.id}
+                                        >
                                             {genre.name}
                                             {i === book.genres.length - 1 ? '' : ','}
-                                        </span>
+                                        </Link>
                                     ))}
-                                </span>
+                                </Link>
                             </div>
                         </div>
                     </div>

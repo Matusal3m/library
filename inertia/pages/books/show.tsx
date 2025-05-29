@@ -11,7 +11,7 @@ import LendModal from '~/components/ui/dropdowns/lend-dropdown'
 export default function ShowBook({ book, students }: InferPageProps<BooksController, 'show'>) {
     const [openNewReplica, setOpenNewReplica] = useState(false)
     const [selectedReplica, setSelectedReplica] = useState<(typeof book.replicas)[0] | null>(null)
-    const { data, setData, post } = useForm({ seducCode: '' })
+    const { data, setData, post } = useForm({ seducCode: '', bookId: book.id })
 
     const handleOpenNewReplica = () => {
         setData('seducCode', '')
@@ -20,8 +20,9 @@ export default function ShowBook({ book, students }: InferPageProps<BooksControl
 
     const submitNewReplica = (e: React.FormEvent) => {
         e.preventDefault()
-        post(`/books/${book.id}/replicas`, {
+        post(`/book-replicas`, {
             onSuccess: () => setOpenNewReplica(false),
+            only: ['book'],
         })
     }
 
@@ -36,7 +37,7 @@ export default function ShowBook({ book, students }: InferPageProps<BooksControl
 
     const handleDeleteReplica = (replicaId: string) => {
         if (confirm('Tem certeza que deseja excluir esta réplica?')) {
-            router.delete(`/replicas/${replicaId}`)
+            router.delete(`/replicas/${replicaId}`, { only: ['book'] })
         }
     }
 
