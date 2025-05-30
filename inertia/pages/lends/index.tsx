@@ -47,6 +47,32 @@ export default function LendsIndex({
         router.visit('/lends', { only: ['lends'] })
     }
 
+    const handleExtendLend = (id: string) => {
+        if (!confirm('Estender o prazo?')) return
+
+        router.post(
+            `/lends/${id}/extend`,
+            {},
+            {
+                onSuccess: () => partialReloadPage(),
+                onError: () => alert('Erro ao estender o prazo.'),
+            }
+        )
+    }
+
+    const handleFinishLend = (id: string) => {
+        if (!confirm('Finalizar o empréstimo?')) return
+
+        router.post(
+            `/lends/${id}/finish`,
+            {},
+            {
+                onSuccess: () => partialReloadPage(),
+                onError: () => alert('Erro ao finalizar o empréstimo.'),
+            }
+        )
+    }
+
     const handleCreateDocument = () => {
         const params = new URLSearchParams()
 
@@ -334,26 +360,20 @@ export default function LendsIndex({
 
                         <div className="my-2 flex">
                             {lend.itsOngoing && !lend.wasExtended && (
-                                <Link
-                                    className="flex justify-center items-center  h-8 px-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                    method="post"
-                                    href={`/lends/${lend.id}/extend`}
-                                    as="button"
-                                    onSuccess={() => partialReloadPage()}
+                                <button
+                                    className="flex justify-center items-center h-8 px-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                    onClick={() => handleExtendLend(lend.id)}
                                 >
                                     Estender Prazo
-                                </Link>
+                                </button>
                             )}
                             {lend.itsOngoing && (
-                                <Link
-                                    className="flex justify-center items-center  h-8 px-4 text-white rounded-md bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors duration-200 focus:ring-4 font-medium rounded-lg text-sm me-2"
-                                    method="post"
-                                    href={`/lends/${lend.id}/finish`}
-                                    as="button"
-                                    onSuccess={() => partialReloadPage()}
+                                <button
+                                    className="flex justify-center items-center h-8 px-4 text-white rounded-md bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors duration-200 focus:ring-4 font-medium rounded-lg text-sm me-2"
+                                    onClick={() => handleFinishLend(lend.id)}
                                 >
                                     Finalizar
-                                </Link>
+                                </button>
                             )}
                         </div>
                     </div>
