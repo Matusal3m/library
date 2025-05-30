@@ -6,7 +6,7 @@ import AvailableIndicator from '~/components/ui/indicators/available-indicator'
 import UnavailableIndicator from '~/components/ui/indicators/unavailable-indicator'
 import { useState } from 'react'
 import FloatingInput from '~/components/ui/inputs/floating-input'
-import LendModal from '~/components/ui/dropdowns/lend-dropdown'
+import LendModal from '~/components/ui/modals/lend-modal'
 
 export default function ShowBook({ book, students }: InferPageProps<BooksController, 'show'>) {
     const [openNewReplica, setOpenNewReplica] = useState(false)
