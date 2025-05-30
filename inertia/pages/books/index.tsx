@@ -78,7 +78,7 @@ export default function IndexBooks({
 
                             <div>
                                 <strong>Gêneros:</strong>{' '}
-                                <Link className="flex flex-wrap gap-1">
+                                <span className="flex flex-wrap gap-1">
                                     {book.genres.map((genre, i) => (
                                         <Link
                                             href={`/genres/${genre.id}`}
@@ -89,7 +89,7 @@ export default function IndexBooks({
                                             {i === book.genres.length - 1 ? '' : ','}
                                         </Link>
                                     ))}
-                                </Link>
+                                </span>
                             </div>
                         </div>
                     </div>
