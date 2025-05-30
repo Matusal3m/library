@@ -78,6 +78,9 @@ export default function LendModal({ isOpen, onClose, students, replica }: LendMo
                             </button>
                         </div>
                     </div>
+                    <p className="inset-0 text-sm text-gray-400 dark:text-gray-500 mt-1">
+                        Apenas alunos que podem alugar um livro aparecerão
+                    </p>
                 </form>
             </div>
         </div>

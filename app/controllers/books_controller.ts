@@ -84,28 +84,27 @@ export default class BooksController {
      * Show individual record
      */
     async show({ params, inertia }: HttpContext) {
-        const book = await Book.findOrFail(params.id)
+        const book = await Book.query()
+            .where('id', params.id)
+            .preload('authors', (q) => q.select('id', 'name'))
+            .preload('genres', (q) => q.select('id', 'name'))
+            .preload('replicas', (q) => q.select('id', 'seduc_code', 'is_available', 'book_id'))
+            .withCount('replicas', (q) => q.as('quantity'))
+            .firstOrFail()
 
-        await book.load('authors', (q) => q.select('id', 'name'))
-        await book.load('genres', (q) => q.select('id', 'name'))
-        await book.load('replicas', (q) => q.select('id', 'seduc_code', 'is_available', 'book_id'))
+        const students = await Student.query()
+            .select('id', 'name', 'enrollmentNumber')
+            .where('on_lend', false)
+            .exec()
 
-        await book.loadCount('replicas')
-
-        const bookJson = book.serialize()
+        const studentsJson = students.map((student) => ({
+            id: student.id,
+            name: `${student.name} (${student.enrollmentNumber})`,
+        }))
 
         return inertia.render('books/show', {
-            book: {
-                ...bookJson,
-                quantity: book.$extras.replicas_count,
-            } as SerializedBookWithReplicas,
-            students: inertia.optional(
-                async () =>
-                    (await Student.query().select('id', 'name', 'enrollment_number')).map(s => ({
-                        id: s.id,
-                        name:`${s.name} (${s.enrollmentNumber})`
-                    }))  as { id: string; name: string}[]
-            ),
+            book: book.serialize(),
+            students: studentsJson,
         })
     }
 
