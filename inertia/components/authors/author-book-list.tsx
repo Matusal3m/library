@@ -15,7 +15,7 @@ export default function AuthorBookList({
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {books.map((book: any) => (
-                <AuthorBookListItem book={book} />
+                <AuthorBookListItem key={book.id} book={book} />
             ))}
         </div>
     )
