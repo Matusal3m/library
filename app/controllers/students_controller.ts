@@ -1,4 +1,5 @@
 import ClassRoom from '#models/class_room'
+import Lend from '#models/lend'
 import Student from '#models/student'
 import { createStudentValidator, updateStudentValidator } from '#validators/student'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -58,35 +59,17 @@ export default class StudentsController {
     async show({ params, inertia }: HttpContext) {
         const student = await Student.query()
             .where('id', params.id)
-            .preload('classRoom')
-            .preload('lend', (query) => {
-                query.preload('bookReplica').orderBy('created_at', 'desc').first()
-            })
+            .preload('classRoom', (q) => q.select('name'))
             .firstOrFail()
 
+        const lends = await Lend.query()
+            .where('student_id', student.id)
+            .preload('bookReplica', (q) => q.preload('book'))
+            .exec()
+
         return inertia.render('students/show', {
-            student: student as any as {
-                id: string
-                name: string
-                enrollmentNumber: number
-                phoneNumber: string
-                email: string
-                classRoom: { id: string; name: string }
-                lend: {
-                    id: string
-                    createdAt: string
-                    extendedAt: string
-                    endsAt: string
-                    returnedAt: string
-                    itsOngoing: boolean
-                    wasExtended: boolean
-                    book: {
-                        id: string
-                        title: string
-                        seducCode: string
-                    }
-                }
-            },
+            student: student.serialize(),
+            lends: lends.map((l) => l.serialize()),
         })
     }
 
