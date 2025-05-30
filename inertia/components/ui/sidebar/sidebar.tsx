@@ -64,7 +64,6 @@ export default function Sidebar({
                         dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group
                         ${item.href === currentPath ? 'bg-gray-100 dark:bg-gray-700' : ''}
                       `}
-                                            onClick={() => handleClick(item.href)}
                                         >
                                             {item.icon ? (
                                                 <item.icon />
