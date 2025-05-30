@@ -59,10 +59,10 @@ export default function IndexBooks({
                             </h5>
                         </Link>
 
-                        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300 underline ">
+                        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                             <div>
                                 <strong>Autoria:</strong>{' '}
-                                <span className="flex flex-wrap gap-1">
+                                <span className="flex flex-wrap gap-1 underline">
                                     {book.authors.map((author, i) => (
                                         <Link
                                             href={`/authors/${author.id}`}
@@ -78,7 +78,7 @@ export default function IndexBooks({
 
                             <div>
                                 <strong>Gêneros:</strong>{' '}
-                                <span className="flex flex-wrap gap-1">
+                                <span className="flex flex-wrap gap-1 underline">
                                     {book.genres.map((genre, i) => (
                                         <Link
                                             href={`/genres/${genre.id}`}
