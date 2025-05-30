@@ -1,6 +1,5 @@
 import AuthorsLayout from '~/layouts/authors-layout'
 import BooksLayout from '~/layouts/books-layout'
-import ClassRoomsLayout from '~/layouts/class-rooms-layout'
 import GenresLayout from '~/layouts/genres-layout'
 import MainLayout from '~/layouts/main-layout'
 import StudentsLayout from '~/layouts/students-layout'
@@ -8,7 +7,6 @@ import StudentsLayout from '~/layouts/students-layout'
 const layoutMap = [
     ['books/', BooksLayout],
     ['authors/', AuthorsLayout],
-    ['class_rooms/', ClassRoomsLayout],
     ['genres/', GenresLayout],
     ['students/', StudentsLayout],
 ] as const
