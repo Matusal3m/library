@@ -51,7 +51,7 @@ export default function ShowBook({ book, students }: InferPageProps<BooksControl
                     <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                         <BookOpenIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                         <span>
-                            Quantidade de réplicas: <strong>{book.quantity}</strong>
+                            Quantidade de réplicas: <strong>{book.meta.quantity}</strong>
                         </span>
                     </div>
                 </div>
