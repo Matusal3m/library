@@ -33,4 +33,4 @@ router.delete('book-replicas/:id', [BookReplicasController, 'delete'])
 
 router.get('lends/document', [LendsController, 'document'])
 
-router.on('/').renderInertia('home')
+router.on('*').redirect('/lends')
