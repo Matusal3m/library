@@ -298,9 +298,18 @@ export default function LendsIndex({
                                 <CalendarIcon className="w-4 h-4" />
                                 Empréstimo em: {lend.createdAt}
                             </div>
-                            <div className="flex items-center gap-2">
-                                <ClockIcon className="w-4 h-4" />
-                                Devolução prevista: {lend.endsAt}
+                            <div>
+                                {lend.itsOngoing ? (
+                                    <div className="flex items-center gap-2">
+                                        <ClockIcon className="w-4 h-4" />
+                                        Devolução prevista: {lend.endsAt}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2">
+                                        <ClockIcon className="w-4 h-4" />
+                                        Devolvido em: {lend.returnedAt}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
