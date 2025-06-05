@@ -10,7 +10,6 @@ import {
     CheckCircle2,
     XCircle,
 } from 'lucide-react'
-import { on } from 'node:events'
 
 export default function StudentShow({
     student,
@@ -28,11 +27,21 @@ export default function StudentShow({
                 <ul className="space-y-2 text-gray-700 dark:text-gray-300 text-sm">
                     <li className="flex items-center gap-2">
                         <Mail className="w-4 h-4 text-gray-500" />
-                        <strong>Email:</strong> {student.email}
+                        <strong>Email:</strong>{' '}
+                        {student.email ? (
+                            student.email
+                        ) : (
+                            <span className="italic text-gray-500">Não informado</span>
+                        )}
                     </li>
                     <li className="flex items-center gap-2">
                         <Phone className="w-4 h-4 text-gray-500" />
-                        <strong>Telefone:</strong> {student.phoneNumber}
+                        <strong>Telefone:</strong>{' '}
+                        {student.phoneNumber ? (
+                            student.phoneNumber
+                        ) : (
+                            <span className="italic text-gray-500">Não informado</span>
+                        )}
                     </li>
                     <li className="flex items-center gap-2">
                         <School className="w-4 h-4 text-gray-500" />

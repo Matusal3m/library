@@ -13,11 +13,9 @@ vine.messagesProvider = new SimpleMessagesProvider(
         'enrollmentNumber.positive': 'O número de matrícula deve ser positivo',
         'enrollmentNumber.unique': 'Este número de matrícula já está em uso',
 
-        'email.required': 'O e-mail é obrigatório',
         'email.unique': 'Este e-mail já está cadastrado',
         'email.string': 'O e-mail deve ser um texto válido',
 
-        'phoneNumber.required': 'O telefone é obrigatório',
         'phoneNumber.regex': 'O telefone deve estar no formato válido (ex: (85) 99999-9999)',
 
         'classRoomId.required': 'A turma é obrigatória',
@@ -48,17 +46,21 @@ export const createStudentValidator = vine.compile(
             table: 'students',
             column: 'enrollment_number',
         }),
-        email: vine.string().unique({
-            table: 'students',
-            column: 'email',
-        }),
+        email: vine
+            .string()
+            .unique({
+                table: 'students',
+                column: 'email',
+            })
+            .optional(),
         phoneNumber: vine
             .string()
             .regex(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/)
             .unique({
                 table: 'students',
                 column: 'phone_number',
-            }),
+            })
+            .optional(),
         classRoomId: vine.string(),
     })
 )

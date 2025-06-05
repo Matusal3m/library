@@ -16,8 +16,8 @@ export default function EditStudentForm({
         name: student.name,
         enrollmentNumber: student.enrollmentNumber,
         classRoomId: student.classRoomId,
-        email: student.email,
-        phoneNumber: student.phoneNumber,
+        email: student.email || '',
+        phoneNumber: student.phoneNumber || '',
     })
 
     function submit(e: FormEvent) {

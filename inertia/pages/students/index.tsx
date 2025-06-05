@@ -64,12 +64,13 @@ export default function StudentsIndex({
 
                         <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                             <div>
-                                <strong>Email:</strong> <span>{student.email}</span>
+                                <strong>Email:</strong>{' '}
+                                <span>{student.email || 'Email não registrado'}</span>
                             </div>
 
                             <div>
                                 <strong>Número de telefone:</strong>{' '}
-                                <span>{student.phoneNumber}</span>
+                                <span>{student.phoneNumber || 'Número não registrado'}</span>
                             </div>
 
                             <div className="flex flex-col gap-2">
